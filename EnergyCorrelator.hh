@@ -34,15 +34,17 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 namespace contrib{
 
+  
+  // GPS suggests: move this into EnergyCorrelator class
+  enum ecmode {
+    pT_R,    // GPS: rename as pt_R 
+    E_Omega  // GPS: rename as E_theta (both for consistency with paper & fastjet capitalisation)
+  };
 
-enum ecmode {
-   pT_R,
-   E_Omega
-};
 
 
 //------------------------------------------------------------------------
-/// \class Test
+/// \class EnergyCorrelator
 /// <insert short description>
 ///
 /// <lnsert long description>
@@ -56,11 +58,16 @@ private:
 
 public:
 
+
+
    EnergyCorrelator(int N, double beta, ecmode mode = pT_R) : _N(N), _beta(beta), _mode(mode) {};
    ~EnergyCorrelator(){}
    
    double result(const PseudoJet& jet) const;
 
+
+
+  // GPS: the next two we might have as "protected"
    double energy(const PseudoJet& jet) const {
       if (_mode == pT_R) {
          return jet.perp();
@@ -129,6 +136,19 @@ inline double EnergyCorrelator::result(const PseudoJet& jet) const {
             }
          }
       }
+   } else if (_N == 3) {
+     double  res_i, res_ij;
+      for (unsigned int i = 0; i < particles.size(); i++) {
+         for (unsigned int j = i; j < particles.size(); j++) {
+           res_ij = energy(particles[i]) * energy(particles[j]) * theta_beta[i,j];
+            for (unsigned int k = j; k < particles.size(); k++) {
+               answer += res_ij
+                        * energy(particles[k])
+                        * pow(angle(particles[i],particles[k])
+                              * angle(particles[j],particles[k]), _beta);
+            }
+         }
+      }
    } else if (_N == 4) {
       for (unsigned int i = 0; i < particles.size(); i++) {
          for (unsigned int j = i; j < particles.size(); j++) {
@@ -152,7 +172,7 @@ inline double EnergyCorrelator::result(const PseudoJet& jet) const {
    
    } else {
       std::cerr << "EnergyCorrelator is only hard coded for N = 0,1,2,3,4"  << std::endl;
-      assert(false);
+      assert(N <= 4);
    }
 
    return answer;
