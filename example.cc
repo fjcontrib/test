@@ -214,7 +214,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                time(&end);
                cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
 
-               num_iter = 100000;
+               num_iter = 10000;
                time(&begin);
                for (int t = 0; t < num_iter; t++) {
                   EnergyCorrelatorDoubleRatio C2(2,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
