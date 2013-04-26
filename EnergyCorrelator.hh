@@ -34,21 +34,22 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 namespace contrib{
 
-  
-  // GPS suggests: move this into EnergyCorrelator class
-  enum ecmode {
-    pT_R,    // GPS: rename as pt_R 
-    E_Omega  // GPS: rename as E_theta (both for consistency with paper & fastjet capitalisation)
-  };
-
-
-
 //------------------------------------------------------------------------
 /// \class EnergyCorrelator
-/// <insert short description>
+/// Calculates ECF(N,beta).
 ///
-/// <lnsert long description>
+/// EnergyCorrelator(int N, double beta, ecmode mode)
+/// Called ECF(N,beta) in the publication.
+/// N is the multiplicity, beta is the angular exponent, and
+/// mode = pt_R (default) or E_theta sets how energies and angles are determined.
 class EnergyCorrelator : public FunctionOfPseudoJet<double> {
+
+public:
+
+  enum ecmode {
+    pt_R,
+    E_theta
+  };
 
 private:
 
@@ -56,34 +57,26 @@ private:
    double _beta;
    ecmode _mode;
 
-public:
+   // storage for NPARTICLE_STORE particles, to save computation time
+# define NPARTICLE_STORE 10000
+   static double energyStore[NPARTICLE_STORE];
+   static double angleStore[NPARTICLE_STORE][NPARTICLE_STORE];
 
-
-
-   EnergyCorrelator(int N, double beta, ecmode mode = pT_R) : _N(N), _beta(beta), _mode(mode) {};
-   ~EnergyCorrelator(){}
-   
-   double result(const PseudoJet& jet) const;
-
-
-
-  // GPS: the next two we might have as "protected"
    double energy(const PseudoJet& jet) const {
-      if (_mode == pT_R) {
+      if (_mode == pt_R) {
          return jet.perp();
-      }  else if (_mode == E_Omega) {
+      }  else if (_mode == E_theta) {
          return jet.e();
       } else {
          assert(false);
          return NAN;
       }
-   
    }
    
    double angle(const PseudoJet& jet1,const PseudoJet& jet2) const {
-      if (_mode == pT_R) {
+      if (_mode == pt_R) {
          return jet1.delta_R(jet2);
-      } else if (_mode == E_Omega) {
+      } else if (_mode == E_theta) {
          // doesn't seem to be a fastjet built in for this
          double dot = jet1.px()*jet2.px() + jet1.py()*jet2.py() + jet1.pz()*jet2.pz();
          double norm1 = sqrt(jet1.px()*jet1.px() + jet1.py()*jet1.py() + jet1.pz()*jet1.pz());
@@ -99,98 +92,36 @@ public:
       }
    }
 
+public:
+
+   EnergyCorrelator(int N, double beta, ecmode mode = pt_R) : _N(N), _beta(beta), _mode(mode) {};
+   ~EnergyCorrelator(){}
+   
+   double result(const PseudoJet& jet) const;
 
 };
 
-inline double EnergyCorrelator::result(const PseudoJet& jet) const {
-
-   std::vector<fastjet::PseudoJet> particles = jet.constituents();
-
-   double answer = 0.0;
-
-   if (_N == 0) {
-      return 1.0;
-   } else if (_N == 1) {
-      for (unsigned int i = 0; i < particles.size(); i++) {
-         answer += energy(particles[i]);
-      }
-   } else if (_N == 2) {
-      for (unsigned int i = 0; i < particles.size(); i++) {
-         for (unsigned int j = i; j < particles.size(); j++) {
-            answer += energy(particles[i])
-                        * energy(particles[j])
-                        * pow(angle(particles[i],particles[j]), _beta);
-         }
-      }   
-   
-   } else if (_N == 3) {
-      for (unsigned int i = 0; i < particles.size(); i++) {
-         for (unsigned int j = i; j < particles.size(); j++) {
-            for (unsigned int k = j; k < particles.size(); k++) {
-               answer += energy(particles[i])
-                        * energy(particles[j])
-                        * energy(particles[k])
-                        * pow(angle(particles[i],particles[j])
-                              * angle(particles[i],particles[k])
-                              * angle(particles[j],particles[k]), _beta);
-            }
-         }
-      }
-   } else if (_N == 3) {
-     double  res_i, res_ij;
-      for (unsigned int i = 0; i < particles.size(); i++) {
-         for (unsigned int j = i; j < particles.size(); j++) {
-           res_ij = energy(particles[i]) * energy(particles[j]) * theta_beta[i,j];
-            for (unsigned int k = j; k < particles.size(); k++) {
-               answer += res_ij
-                        * energy(particles[k])
-                        * pow(angle(particles[i],particles[k])
-                              * angle(particles[j],particles[k]), _beta);
-            }
-         }
-      }
-   } else if (_N == 4) {
-      for (unsigned int i = 0; i < particles.size(); i++) {
-         for (unsigned int j = i; j < particles.size(); j++) {
-            for (unsigned int k = j; k < particles.size(); k++) {
-               for (unsigned int l = k; l < particles.size(); l++) {
-                  answer += energy(particles[i])
-                        * energy(particles[j])
-                        * energy(particles[k])
-                        * energy(particles[l])
-                        * pow(angle(particles[i],particles[j])
-                           * angle(particles[i],particles[k])
-                           * angle(particles[j],particles[k])
-                           * angle(particles[i],particles[l])
-                           * angle(particles[j],particles[l])
-                           * angle(particles[k],particles[l]), _beta);
-               }
-            }
-         }
-      }
-
-   
-   } else {
-      std::cerr << "EnergyCorrelator is only hard coded for N = 0,1,2,3,4"  << std::endl;
-      assert(N <= 4);
-   }
-
-   return answer;
-
-}
+// core EnergyCorrelator::result code in .cc file.
 
 
+
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorRatio
+/// Calculates ECF(N+1,beta)/ECF(N,beta).
+///
+/// EnergyCorrelatorRatio(int N, double beta, ecmode mode)
+/// Called r_N^(beta) in the publication, equal to ECF(N+1,beta)/ECF(N,beta). 
 class EnergyCorrelatorRatio : public FunctionOfPseudoJet<double> {
 
 private:
 
    int _N;
    double _beta;
-   ecmode _mode;
+   EnergyCorrelator::ecmode _mode;
 
 public:
 
-   EnergyCorrelatorRatio(int N, double beta, ecmode mode = pT_R) : _N(N), _beta(beta), _mode(mode) {};
+   EnergyCorrelatorRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R) : _N(N), _beta(beta), _mode(mode) {};
    ~EnergyCorrelatorRatio() {}
    
    
@@ -209,17 +140,25 @@ inline double EnergyCorrelatorRatio::result(const PseudoJet& jet) const {
 }
 
 
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorDoubleRatio
+/// Calculates ECF(N-1,beta)*ECP(N+1)/ECF(N,beta)^2.
+///
+/// EnergyCorrelatorDoubleRatio(int N, double beta, ecmode mode)
+/// Called C_N^(beta) in the publication, equal to r_N/r_{N-1}.
+/// This is the recommended function for boosted N-prong object discrimination.
+/// (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
 class EnergyCorrelatorDoubleRatio : public FunctionOfPseudoJet<double> {
 
 private:
 
    int _N;
    double _beta;
-   ecmode _mode;
+   EnergyCorrelator::ecmode _mode;
 
 public:
 
-   EnergyCorrelatorDoubleRatio(int N, double beta, ecmode mode = pT_R) : _N(N), _beta(beta), _mode(mode) {};
+   EnergyCorrelatorDoubleRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R) : _N(N), _beta(beta), _mode(mode) {};
    ~EnergyCorrelatorDoubleRatio() {}
    
    
@@ -236,8 +175,6 @@ inline double EnergyCorrelatorDoubleRatio::result(const PseudoJet& jet) const {
    return numerator/denominator;
 
 }
-
-
 
 
 } // namespace contrib

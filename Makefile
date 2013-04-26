@@ -25,6 +25,7 @@ LDFLAGS += -lm $(shell $(FASTJETCONFIG) --libs)
 
 OBJS  = $(SRCS:.cc=.o)
 EXAMPLES_SRCS  = $(EXAMPLES:=.cc)
+EXAMPLES_OBJS  = $(EXAMPLES:=.o)
 
 install_HEADER  = $(install_script) -c -m 644
 install_LIB     = $(install_script) -c -m 644
@@ -38,7 +39,7 @@ install_SCRIPT  = $(install_script) -c
 # compilation of the code (default target)
 all: lib$(NAME).a
 
-lib$(NAME).a: $(OBJS) 
+lib$(NAME).a: $(OBJS)
 	ar cru lib$(NAME).a $(OBJS)
 	ranlib lib$(NAME).a
 
@@ -47,8 +48,12 @@ examples: $(EXAMPLES)
 
 # the following construct makes it possible to automatically build
 # each of the examples listed in $EXAMPLES
-$(EXAMPLES): % : %.o all
+$(EXAMPLES): % : %.o all $(INSTALLED_HEADERS)
 	$(CXX) -o $@ $< -L. -l$(NAME) $(LDFLAGS)
+
+# Make sure objects recompile when headers change
+$(OBJS): %.o : %.cc $(INSTALLED_HEADERS)
+$(EXAMPLES_OBJS): %.o : %.cc $(INSTALLED_HEADERS)
 
 # check that everything went fine
 check: examples
