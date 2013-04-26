@@ -48,7 +48,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
    // take care of N = 2 case.
    if (_N == 2) {
       for (unsigned int i = 0; i < particles.size(); i++) {
-         for (unsigned int j = i + 1; j < particles.size(); j++) {
+         for (unsigned int j = i + 1; j < particles.size(); j++) { //note offset by one so that angle is never called on identical pairs
             answer += energy(particles[i])
                       * energy(particles[j])
                       * pow(angleSquared(particles[i],particles[j]), _beta/2.0);
@@ -66,7 +66,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
 
    
    // Now deal with N = 3 and N = 4.  Different options if storage array is used or not.  
-   if (_method == ec_storage_array) {
+   if (_strategy == storage_array) {
    
          // For N > 2, fill static storage array to save computation time.
 
@@ -132,7 +132,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
          assert(_N <= 4);
       }
 
-   } else if (_method == ec_simple) {
+   } else if (_strategy == slow) {
       if (_N == 3) {
          for (unsigned int i = 0; i < particles.size(); i++) {
             for (unsigned int j = i + 1; j < particles.size(); j++) {

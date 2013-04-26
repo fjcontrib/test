@@ -38,35 +38,35 @@ namespace contrib{
 /// \class EnergyCorrelator
 /// Calculates ECF(N,beta).
 ///
-/// EnergyCorrelator(int N, double beta, ecmode mode)
+/// EnergyCorrelator(int N, double beta, Measure measure)
 /// Called ECF(N,beta) in the publication.
 /// N is the multiplicity, beta is the angular exponent, and
-/// mode = pt_R (default) or E_theta sets how energies and angles are determined.
+/// measure = pt_R (default) or E_theta sets how energies and angles are determined.
 class EnergyCorrelator : public FunctionOfPseudoJet<double> {
 
 public:
 
-  enum ecmode {
+  enum Measure {
     pt_R,
     E_theta
   };
 
-  enum ecmethod {
-    ec_simple,
-    ec_storage_array
+  enum Strategy {
+    slow,
+    storage_array
   };
 
 private:
 
    int _N;
    double _beta;
-   ecmode _mode;
-   ecmethod _method;
+   Measure _measure;
+   Strategy _strategy;
 
    double energy(const PseudoJet& jet) const {
-      if (_mode == pt_R) {
+      if (_measure == pt_R) {
          return jet.perp();
-      }  else if (_mode == E_theta) {
+      }  else if (_measure == E_theta) {
          return jet.e();
       } else {
          assert(false);
@@ -75,9 +75,9 @@ private:
    }
    
    double angleSquared(const PseudoJet& jet1,const PseudoJet& jet2) const {
-      if (_mode == pt_R) {
+      if (_measure == pt_R) {
          return jet1.squared_distance(jet2);
-      } else if (_mode == E_theta) {
+      } else if (_measure == E_theta) {
          // doesn't seem to be a fastjet built in for this
          double dot = jet1.px()*jet2.px() + jet1.py()*jet2.py() + jet1.pz()*jet2.pz();
          double norm1 = sqrt(jet1.px()*jet1.px() + jet1.py()*jet1.py() + jet1.pz()*jet1.pz());
@@ -96,7 +96,7 @@ private:
 
 public:
 
-   EnergyCorrelator(int N, double beta, ecmode mode = pt_R, ecmethod method = ec_storage_array) : _N(N), _beta(beta), _mode(mode), _method(method) {};
+   EnergyCorrelator(int N, double beta, Measure measure = pt_R, Strategy strategy = storage_array) : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
    ~EnergyCorrelator(){}
    
    double result(const PseudoJet& jet) const;
@@ -111,7 +111,7 @@ public:
 /// \class EnergyCorrelatorRatio
 /// Calculates ECF(N+1,beta)/ECF(N,beta).
 ///
-/// EnergyCorrelatorRatio(int N, double beta, ecmode mode)
+/// EnergyCorrelatorRatio(int N, double beta, Measure measure)
 /// Called r_N^(beta) in the publication, equal to ECF(N+1,beta)/ECF(N,beta). 
 class EnergyCorrelatorRatio : public FunctionOfPseudoJet<double> {
 
@@ -119,12 +119,12 @@ private:
 
    int _N;
    double _beta;
-   EnergyCorrelator::ecmode _mode;
-   EnergyCorrelator::ecmethod _method;
+   EnergyCorrelator::Measure _measure;
+   EnergyCorrelator::Strategy _strategy;
 
 public:
 
-   EnergyCorrelatorRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R, EnergyCorrelator::ecmethod method = EnergyCorrelator::ec_storage_array) : _N(N), _beta(beta), _mode(mode), _method(method) {};
+   EnergyCorrelatorRatio(int N, double beta, EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R, EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
    ~EnergyCorrelatorRatio() {}
    
    
@@ -135,8 +135,8 @@ public:
 
 inline double EnergyCorrelatorRatio::result(const PseudoJet& jet) const {
 
-   double numerator = EnergyCorrelator(_N + 1, _beta, _mode, _method).result(jet);
-   double denominator = EnergyCorrelator(_N, _beta, _mode, _method).result(jet);
+   double numerator = EnergyCorrelator(_N + 1, _beta, _measure, _strategy).result(jet);
+   double denominator = EnergyCorrelator(_N, _beta, _measure, _strategy).result(jet);
 
    return numerator/denominator;
 
@@ -147,7 +147,7 @@ inline double EnergyCorrelatorRatio::result(const PseudoJet& jet) const {
 /// \class EnergyCorrelatorDoubleRatio
 /// Calculates ECF(N-1,beta)*ECP(N+1)/ECF(N,beta)^2.
 ///
-/// EnergyCorrelatorDoubleRatio(int N, double beta, ecmode mode)
+/// EnergyCorrelatorDoubleRatio(int N, double beta, Measure measure)
 /// Called C_N^(beta) in the publication, equal to r_N/r_{N-1}.
 /// This is the recommended function for boosted N-prong object discrimination.
 /// (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
@@ -157,12 +157,12 @@ private:
 
    int _N;
    double _beta;
-   EnergyCorrelator::ecmode _mode;
-   EnergyCorrelator::ecmethod _method;
+   EnergyCorrelator::Measure _measure;
+   EnergyCorrelator::Strategy _strategy;
 
 public:
 
-   EnergyCorrelatorDoubleRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R,  EnergyCorrelator::ecmethod method = EnergyCorrelator::ec_storage_array) : _N(N), _beta(beta), _mode(mode), _method(method) {};
+   EnergyCorrelatorDoubleRatio(int N, double beta, EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R,  EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
    ~EnergyCorrelatorDoubleRatio() {}
    
    
@@ -173,8 +173,8 @@ public:
 
 inline double EnergyCorrelatorDoubleRatio::result(const PseudoJet& jet) const {
 
-   double numerator = EnergyCorrelator(_N - 1, _beta, _mode, _method).result(jet) * EnergyCorrelator(_N + 1, _beta, _mode, _method).result(jet);
-   double denominator = pow(EnergyCorrelator(_N, _beta, _mode, _method).result(jet), 2.0);
+   double numerator = EnergyCorrelator(_N - 1, _beta, _measure, _strategy).result(jet) * EnergyCorrelator(_N + 1, _beta, _measure, _strategy).result(jet);
+   double denominator = pow(EnergyCorrelator(_N, _beta, _measure, _strategy).result(jet), 2.0);
 
    return numerator/denominator;
 

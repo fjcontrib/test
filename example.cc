@@ -111,15 +111,15 @@ void analyze(const vector<PseudoJet> & input_particles) {
          betalist.push_back(2.0);
 
          // checking the two energy/angle modes
-         vector<EnergyCorrelator::ecmode> modelist;
-         modelist.push_back(EnergyCorrelator::pt_R);
-         modelist.push_back(EnergyCorrelator::E_theta); 
+         vector<EnergyCorrelator::Measure> measurelist;
+         measurelist.push_back(EnergyCorrelator::pt_R);
+         measurelist.push_back(EnergyCorrelator::E_theta); 
 
          vector<string> modename;
          modename.push_back("pt_R");
          modename.push_back("E_theta");
 
-         for (unsigned int M = 0; M < modelist.size(); M++) {
+         for (unsigned int M = 0; M < measurelist.size(); M++) {
             
             cout << "-------------------------------------------------------------------------------------" << endl;
             cout << "EnergyCorrelator:  ECF(N,beta) with " << modename[M] << endl;
@@ -129,11 +129,11 @@ void analyze(const vector<PseudoJet> & input_particles) {
             for (unsigned int B = 0; B < betalist.size(); B++) {
                double beta = betalist[B];
                
-               EnergyCorrelator ECF0(0,beta,modelist[M]);
-               EnergyCorrelator ECF1(1,beta,modelist[M]);
-               EnergyCorrelator ECF2(2,beta,modelist[M]);
-               EnergyCorrelator ECF3(3,beta,modelist[M]);
-               EnergyCorrelator ECF4(4,beta,modelist[M]);
+               EnergyCorrelator ECF0(0,beta,measurelist[M]);
+               EnergyCorrelator ECF1(1,beta,measurelist[M]);
+               EnergyCorrelator ECF2(2,beta,measurelist[M]);
+               EnergyCorrelator ECF3(3,beta,measurelist[M]);
+               EnergyCorrelator ECF4(4,beta,measurelist[M]);
 
                printf("%7.3f %15.2f %15.2f %15.2f %15.2f \n",beta,ECF1(myJet),ECF2(myJet),ECF3(myJet),ECF4(myJet));
             }
@@ -147,10 +147,10 @@ void analyze(const vector<PseudoJet> & input_particles) {
             for (unsigned int B = 0; B < betalist.size(); B++) {
                double beta = betalist[B];
                
-               EnergyCorrelatorRatio r0(0,beta,modelist[M]);
-               EnergyCorrelatorRatio r1(1,beta,modelist[M]);
-               EnergyCorrelatorRatio r2(2,beta,modelist[M]);
-               EnergyCorrelatorRatio r3(3,beta,modelist[M]);
+               EnergyCorrelatorRatio r0(0,beta,measurelist[M]);
+               EnergyCorrelatorRatio r1(1,beta,measurelist[M]);
+               EnergyCorrelatorRatio r2(2,beta,measurelist[M]);
+               EnergyCorrelatorRatio r3(3,beta,measurelist[M]);
 
                printf("%7.3f %15.4f %15.4f %15.4f %15.4f \n",beta,r0(myJet),r1(myJet),r2(myJet),r3(myJet));
             }
@@ -164,9 +164,9 @@ void analyze(const vector<PseudoJet> & input_particles) {
             for (unsigned int B = 0; B < betalist.size(); B++) {
                double beta = betalist[B];
                
-               EnergyCorrelatorDoubleRatio C1(1,beta,modelist[M]);
-               EnergyCorrelatorDoubleRatio C2(2,beta,modelist[M]);
-               EnergyCorrelatorDoubleRatio C3(3,beta,modelist[M]);
+               EnergyCorrelatorDoubleRatio C1(1,beta,measurelist[M]);
+               EnergyCorrelatorDoubleRatio C2(2,beta,measurelist[M]);
+               EnergyCorrelatorDoubleRatio C3(3,beta,measurelist[M]);
 
                printf("%7.3f %15.6f %15.6f %15.6f \n",beta,C1(myJet),C2(myJet),C3(myJet));
             }
@@ -178,25 +178,70 @@ void analyze(const vector<PseudoJet> & input_particles) {
             if (do_timing_test) {
             
                time_t begin, end;
-               double num_iter = 1000;
+               double num_iter;
                double beta = 0.5;
 
+               cout << setprecision(6);
+
+               // test C1
+               num_iter = 10000;
                time(&begin);
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C2(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::ec_simple);
-                  C2(myJet);
+                  EnergyCorrelatorDoubleRatio C1(1,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
+                  C1(myJet);
                }
                time(&end);
-               cout << "Simple method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+               cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C1"<< endl;
 
                num_iter = 10000;
                time(&begin);
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C2(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::ec_storage_array);
+                  EnergyCorrelatorDoubleRatio C1(1,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
+                  C1(myJet);
+               }
+               time(&end);
+               cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C1"<< endl;
+
+
+
+               // test C2
+               num_iter = 10000;
+               time(&begin);
+               for (int t = 0; t < num_iter; t++) {
+                  EnergyCorrelatorDoubleRatio C2(2,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
+                  C2(myJet);
+               }
+               time(&end);
+               cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+
+               num_iter = 100000;
+               time(&begin);
+               for (int t = 0; t < num_iter; t++) {
+                  EnergyCorrelatorDoubleRatio C2(2,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
                   C2(myJet);
                }
                time(&end);
                cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+
+               // test C3
+               num_iter = 1000;
+               time(&begin);
+               for (int t = 0; t < num_iter; t++) {
+                  EnergyCorrelatorDoubleRatio C3(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
+                  C3(myJet);
+               }
+               time(&end);
+               cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C3"<< endl;
+
+               num_iter = 10000;
+               time(&begin);
+               for (int t = 0; t < num_iter; t++) {
+                  EnergyCorrelatorDoubleRatio C3(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
+                  C3(myJet);
+               }
+               time(&end);
+               cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C3"<< endl;
+
 
             }
          }
