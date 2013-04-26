@@ -80,3 +80,7 @@ install: all
 
 depend:
 	makedepend -Y --   -- $(SRCS) $(EXAMPLES_SRCS)
+# DO NOT DELETE
+
+EnergyCorrelator.o: EnergyCorrelator.hh
+example.o: EnergyCorrelator.hh

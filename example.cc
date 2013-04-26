@@ -122,6 +122,12 @@ void analyze(const vector<PseudoJet> & input_particles) {
             EnergyCorrelator ECF3(3,beta);
             EnergyCorrelator ECF4(4,beta);
 
+            // for timing tests
+            // double res;
+            // for (unsigned i = 0; i < 1000; i++) {
+            //   res = ECF3(myJet);
+            // }
+
             printf("%7.3f %15.2f %15.2f %15.2f %15.2f \n",beta,ECF1(myJet),ECF2(myJet),ECF3(myJet),ECF4(myJet));
          }
          cout << "-------------------------------------------------------------------------------------" << endl << endl;
