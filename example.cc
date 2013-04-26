@@ -98,8 +98,10 @@ void analyze(const vector<PseudoJet> & input_particles) {
    
    for (int j = 0; j < 2; j++) { // Two hardest jets per event
       if (antikt_jets[j].perp() > 200) {
+         
          PseudoJet myJet = antikt_jets[j];
          
+         // various values of beta
          vector<double> betalist;
          betalist.push_back(0.1);
          betalist.push_back(0.2);
@@ -107,65 +109,97 @@ void analyze(const vector<PseudoJet> & input_particles) {
          betalist.push_back(1.0);
          betalist.push_back(1.5);
          betalist.push_back(2.0);
-         
-         cout << "-------------------------------------------------------------------------------------" << endl;
-         cout << "EnergyCorrelator:  ECF(N,beta)"  << endl;
-         cout << "-------------------------------------------------------------------------------------" << endl;
-         printf("%7s %15s %15s %15s %15s \n","beta", "N=1 (GeV)", "N=2 (GeV^2)", "N=3 (GeV^3)", "N=4 (GeV^4)");
-         
-         for (unsigned int B = 0; B < betalist.size(); B++) {
-            double beta = betalist[B];
+
+         // checking the two energy/angle modes
+         vector<EnergyCorrelator::ecmode> modelist;
+         modelist.push_back(EnergyCorrelator::pt_R);
+         modelist.push_back(EnergyCorrelator::E_theta); 
+
+         vector<string> modename;
+         modename.push_back("pt_R");
+         modename.push_back("E_theta");
+
+         for (unsigned int M = 0; M < modelist.size(); M++) {
             
-            EnergyCorrelator ECF0(0,beta);
-            EnergyCorrelator ECF1(1,beta);
-            EnergyCorrelator ECF2(2,beta);
-            EnergyCorrelator ECF3(3,beta);
-            EnergyCorrelator ECF4(4,beta);
-
-            // for timing tests
-            // double res;
-            // for (unsigned i = 0; i < 1000; i++) {
-            //   res = ECF3(myJet);
-            // }
-
-            printf("%7.3f %15.2f %15.2f %15.2f %15.2f \n",beta,ECF1(myJet),ECF2(myJet),ECF3(myJet),ECF4(myJet));
-         }
-         cout << "-------------------------------------------------------------------------------------" << endl << endl;
-
-         cout << "-------------------------------------------------------------------------------------" << endl;
-         cout << "EnergyCorrelatorRatio:  r_N^(beta) = ECF(N+1,beta)/ECF(N,beta)"  << endl;
-         cout << "-------------------------------------------------------------------------------------" << endl;
-         printf("%7s %15s %15s %15s %15s \n","beta", "N=0 (GeV)", "N=1 (GeV)", "N=2 (GeV)", "N=3 (GeV)");
-         
-         for (unsigned int B = 0; B < betalist.size(); B++) {
-            double beta = betalist[B];
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            cout << "EnergyCorrelator:  ECF(N,beta) with " << modename[M] << endl;
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            printf("%7s %15s %15s %15s %15s \n","beta", "N=1 (GeV)", "N=2 (GeV^2)", "N=3 (GeV^3)", "N=4 (GeV^4)");
             
-            EnergyCorrelatorRatio r0(0,beta);
-            EnergyCorrelatorRatio r1(1,beta);
-            EnergyCorrelatorRatio r2(2,beta);
-            EnergyCorrelatorRatio r3(3,beta);
+            for (unsigned int B = 0; B < betalist.size(); B++) {
+               double beta = betalist[B];
+               
+               EnergyCorrelator ECF0(0,beta,modelist[M]);
+               EnergyCorrelator ECF1(1,beta,modelist[M]);
+               EnergyCorrelator ECF2(2,beta,modelist[M]);
+               EnergyCorrelator ECF3(3,beta,modelist[M]);
+               EnergyCorrelator ECF4(4,beta,modelist[M]);
 
-            printf("%7.3f %15.4f %15.4f %15.4f %15.4f \n",beta,r0(myJet),r1(myJet),r2(myJet),r3(myJet));
-         }
-         cout << "-------------------------------------------------------------------------------------" << endl << endl;
+               printf("%7.3f %15.2f %15.2f %15.2f %15.2f \n",beta,ECF1(myJet),ECF2(myJet),ECF3(myJet),ECF4(myJet));
+            }
+            cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
-         cout << "-------------------------------------------------------------------------------------" << endl;
-         cout << "EnergyCorrelatorDoubleRatio:  C_N^(beta) = r_N^(beta)/r_{N-1}^(beta)"  << endl;
-         cout << "-------------------------------------------------------------------------------------" << endl;
-         printf("%7s %15s %15s %15s \n","beta", "N=1", "N=2", "N=3");
-         
-         for (unsigned int B = 0; B < betalist.size(); B++) {
-            double beta = betalist[B];
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            cout << "EnergyCorrelatorRatio:  r_N^(beta) = ECF(N+1,beta)/ECF(N,beta) with " << modename[M] << endl;
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            printf("%7s %15s %15s %15s %15s \n","beta", "N=0 (GeV)", "N=1 (GeV)", "N=2 (GeV)", "N=3 (GeV)");
             
-            EnergyCorrelatorDoubleRatio C1(1,beta);
-            EnergyCorrelatorDoubleRatio C2(2,beta);
-            EnergyCorrelatorDoubleRatio C3(3,beta);
+            for (unsigned int B = 0; B < betalist.size(); B++) {
+               double beta = betalist[B];
+               
+               EnergyCorrelatorRatio r0(0,beta,modelist[M]);
+               EnergyCorrelatorRatio r1(1,beta,modelist[M]);
+               EnergyCorrelatorRatio r2(2,beta,modelist[M]);
+               EnergyCorrelatorRatio r3(3,beta,modelist[M]);
 
-            printf("%7.3f %15.6f %15.6f %15.6f \n",beta,C1(myJet),C2(myJet),C3(myJet));
+               printf("%7.3f %15.4f %15.4f %15.4f %15.4f \n",beta,r0(myJet),r1(myJet),r2(myJet),r3(myJet));
+            }
+            cout << "-------------------------------------------------------------------------------------" << endl << endl;
+
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            cout << "EnergyCorrelatorDoubleRatio:  C_N^(beta) = r_N^(beta)/r_{N-1}^(beta) with " << modename[M] << endl;
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            printf("%7s %15s %15s %15s \n","beta", "N=1", "N=2", "N=3");
+            
+            for (unsigned int B = 0; B < betalist.size(); B++) {
+               double beta = betalist[B];
+               
+               EnergyCorrelatorDoubleRatio C1(1,beta,modelist[M]);
+               EnergyCorrelatorDoubleRatio C2(2,beta,modelist[M]);
+               EnergyCorrelatorDoubleRatio C3(3,beta,modelist[M]);
+
+               printf("%7.3f %15.6f %15.6f %15.6f \n",beta,C1(myJet),C2(myJet),C3(myJet));
+            }
+            cout << "-------------------------------------------------------------------------------------" << endl << endl;
+            
+            
+            // timing tests for the developers
+            double do_timing_test = false;
+            if (do_timing_test) {
+            
+               time_t begin, end;
+               double num_iter = 1000;
+               double beta = 0.5;
+
+               time(&begin);
+               for (int t = 0; t < num_iter; t++) {
+                  EnergyCorrelatorDoubleRatio C2(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::ec_simple);
+                  C2(myJet);
+               }
+               time(&end);
+               cout << "Simple method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+
+               num_iter = 10000;
+               time(&begin);
+               for (int t = 0; t < num_iter; t++) {
+                  EnergyCorrelatorDoubleRatio C2(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::ec_storage_array);
+                  C2(myJet);
+               }
+               time(&end);
+               cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+
+            }
          }
-         cout << "-------------------------------------------------------------------------------------" << endl << endl;
-
-
       }
    }
 }

@@ -51,16 +51,17 @@ public:
     E_theta
   };
 
+  enum ecmethod {
+    ec_simple,
+    ec_storage_array
+  };
+
 private:
 
    int _N;
    double _beta;
    ecmode _mode;
-
-   // storage for NPARTICLE_STORE particles, to save computation time
-# define NPARTICLE_STORE 10000
-   static double energyStore[NPARTICLE_STORE];
-   static double angleStore[NPARTICLE_STORE][NPARTICLE_STORE];
+   ecmethod _method;
 
    double energy(const PseudoJet& jet) const {
       if (_mode == pt_R) {
@@ -73,9 +74,9 @@ private:
       }
    }
    
-   double angle(const PseudoJet& jet1,const PseudoJet& jet2) const {
+   double angleSquared(const PseudoJet& jet1,const PseudoJet& jet2) const {
       if (_mode == pt_R) {
-         return jet1.delta_R(jet2);
+         return jet1.squared_distance(jet2);
       } else if (_mode == E_theta) {
          // doesn't seem to be a fastjet built in for this
          double dot = jet1.px()*jet2.px() + jet1.py()*jet2.py() + jet1.pz()*jet2.pz();
@@ -84,7 +85,8 @@ private:
          
          double costheta = dot/(norm1 * norm2);
          if (costheta > 1.0) costheta = 1.0; // Need to handle case of numerical overflow
-         return acos(costheta);    
+         double theta = acos(costheta);
+         return theta*theta;    
            
       } else {
          assert(false);
@@ -94,7 +96,7 @@ private:
 
 public:
 
-   EnergyCorrelator(int N, double beta, ecmode mode = pt_R) : _N(N), _beta(beta), _mode(mode) {};
+   EnergyCorrelator(int N, double beta, ecmode mode = pt_R, ecmethod method = ec_storage_array) : _N(N), _beta(beta), _mode(mode), _method(method) {};
    ~EnergyCorrelator(){}
    
    double result(const PseudoJet& jet) const;
@@ -118,10 +120,11 @@ private:
    int _N;
    double _beta;
    EnergyCorrelator::ecmode _mode;
+   EnergyCorrelator::ecmethod _method;
 
 public:
 
-   EnergyCorrelatorRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R) : _N(N), _beta(beta), _mode(mode) {};
+   EnergyCorrelatorRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R, EnergyCorrelator::ecmethod method = EnergyCorrelator::ec_storage_array) : _N(N), _beta(beta), _mode(mode), _method(method) {};
    ~EnergyCorrelatorRatio() {}
    
    
@@ -132,8 +135,8 @@ public:
 
 inline double EnergyCorrelatorRatio::result(const PseudoJet& jet) const {
 
-   double numerator = EnergyCorrelator(_N + 1, _beta, _mode).result(jet);
-   double denominator = EnergyCorrelator(_N, _beta, _mode).result(jet);
+   double numerator = EnergyCorrelator(_N + 1, _beta, _mode, _method).result(jet);
+   double denominator = EnergyCorrelator(_N, _beta, _mode, _method).result(jet);
 
    return numerator/denominator;
 
@@ -155,10 +158,11 @@ private:
    int _N;
    double _beta;
    EnergyCorrelator::ecmode _mode;
+   EnergyCorrelator::ecmethod _method;
 
 public:
 
-   EnergyCorrelatorDoubleRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R) : _N(N), _beta(beta), _mode(mode) {};
+   EnergyCorrelatorDoubleRatio(int N, double beta, EnergyCorrelator::ecmode mode = EnergyCorrelator::pt_R,  EnergyCorrelator::ecmethod method = EnergyCorrelator::ec_storage_array) : _N(N), _beta(beta), _mode(mode), _method(method) {};
    ~EnergyCorrelatorDoubleRatio() {}
    
    
@@ -169,8 +173,8 @@ public:
 
 inline double EnergyCorrelatorDoubleRatio::result(const PseudoJet& jet) const {
 
-   double numerator = EnergyCorrelator(_N - 1, _beta, _mode).result(jet) * EnergyCorrelator(_N + 1, _beta, _mode).result(jet);
-   double denominator = pow(EnergyCorrelator(_N, _beta, _mode).result(jet), 2.0);
+   double numerator = EnergyCorrelator(_N - 1, _beta, _mode, _method).result(jet) * EnergyCorrelator(_N + 1, _beta, _mode, _method).result(jet);
+   double denominator = pow(EnergyCorrelator(_N, _beta, _mode, _method).result(jet), 2.0);
 
    return numerator/denominator;
 
