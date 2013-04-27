@@ -74,7 +74,7 @@ private:
       }
    }
    
-   double angleSquared(const PseudoJet& jet1,const PseudoJet& jet2) const {
+   double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
       if (_measure == pt_R) {
          return jet1.squared_distance(jet2);
       } else if (_measure == E_theta) {
