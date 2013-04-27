@@ -184,23 +184,23 @@ void analyze(const vector<PseudoJet> & input_particles) {
                cout << setprecision(6);
 
                // test C1
-               num_iter = 10000;
+               num_iter = 100000;
                time(&begin);
                for (int t = 0; t < num_iter; t++) {
                   EnergyCorrelatorDoubleRatio C1(1,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
                   C1(myJet);
                }
                time(&end);
-               cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C1"<< endl;
+               cout << "Slow method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C1"<< endl;
 
-               num_iter = 10000;
+               num_iter = 100000;
                time(&begin);
                for (int t = 0; t < num_iter; t++) {
                   EnergyCorrelatorDoubleRatio C1(1,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
                   C1(myJet);
                }
                time(&end);
-               cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C1"<< endl;
+               cout << "Storage array method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C1"<< endl;
 
 
 
@@ -212,7 +212,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                   C2(myJet);
                }
                time(&end);
-               cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+               cout << "Slow method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C2"<< endl;
 
                num_iter = 10000;
                time(&begin);
@@ -221,7 +221,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                   C2(myJet);
                }
                time(&end);
-               cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C2"<< endl;
+               cout << "Storage array method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C2"<< endl;
 
                // test C3
                num_iter = 1000;
@@ -231,7 +231,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                   C3(myJet);
                }
                time(&end);
-               cout << "Slow method: " << difftime(end, begin)/double(num_iter) << " seconds per C3"<< endl;
+               cout << "Slow method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C3"<< endl;
 
                num_iter = 10000;
                time(&begin);
@@ -240,7 +240,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                   C3(myJet);
                }
                time(&end);
-               cout << "Storage array method: " << difftime(end, begin)/double(num_iter) << " seconds per C3"<< endl;
+               cout << "Storage array method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C3"<< endl;
 
 
             }
