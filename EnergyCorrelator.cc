@@ -47,13 +47,15 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
       return answer;
    }
 
+   double half_beta = _beta/2.0;
+
    // take care of N = 2 case.
    if (_N == 2) {
       for (unsigned int i = 0; i < particles.size(); i++) {
          for (unsigned int j = i + 1; j < particles.size(); j++) { //note offset by one so that angle is never called on identical pairs
             answer += energy(particles[i])
                       * energy(particles[j])
-                      * pow(angleSquared(particles[i],particles[j]), _beta/2.0);
+                      * pow(angleSquared(particles[i],particles[j]), half_beta);
          }
       }   
       return answer;
@@ -83,16 +85,14 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
       std::vector< std::vector<double> > angleStore;
       angleStore.resize(particles.size());
       for (unsigned int i = 0; i < angleStore.size(); i++) {
-         angleStore[i].resize(particles.size());
+         angleStore[i].resize(i);
       }
       
       // Fill storage with energy/angle information
       for (unsigned int i = 0; i < particles.size(); i++) {
          energyStore[i] = energy(particles[i]);
-         for (unsigned int j = i+1; j < particles.size(); j++) {
-            angleStore[i][j] = pow(angleSquared(particles[i],particles[j]), _beta/2.0);
-            //angleStore[j][i] = NAN; // no need to store other size.
-            angleStore[j][i] = angleStore[i][j]; // no need to store other size.
+         for (unsigned int j = 0; j < i; j++) {
+           angleStore[i][j] = pow(angleSquared(particles[i],particles[j]), half_beta);
          }
       }
 
@@ -111,20 +111,33 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
          //       }
          //    }
          // } 
-         // new method
-         for (int i = n - 1; i >= 0; i--) {
-            for (int j = i - 1; j >= 0 ; j--) {
+         for (unsigned int i = 2; i < particles.size(); i++) {
+            for (unsigned int j = 1; j < i; j++) {
                double ans_ij = energyStore[i]
                                * energyStore[j]
                                * angleStore[i][j];
-               for (int k = j - 1; k >= 0; k--) {
+               for (unsigned int k = 0; k < j; k++) {
                   answer += ans_ij
                             * energyStore[k]
                             * angleStore[i][k]
                             * angleStore[j][k];
                }
             }
-         }       
+         } 
+         // // new method
+         // for (int i = n - 1; i >= 0; i--) {
+         //    for (int j = i - 1; j >= 0 ; j--) {
+         //       double ans_ij = energyStore[i]
+         //                       * energyStore[j]
+         //                       * angleStore[i][j];
+         //       for (int k = j - 1; k >= 0; k--) {
+         //          answer += ans_ij
+         //                    * energyStore[k]
+         //                    * angleStore[i][k]
+         //                    * angleStore[j][k];
+         //       }
+         //    }
+         // }       
       } else if (_N == 4) {
          // for (unsigned int i = 0; i < particles.size(); i++) {
          //    for (unsigned int j = i + 1; j < particles.size(); j++) {
@@ -146,18 +159,17 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
          //       }
          //    }
          // } 
-         // new method
-         for (int i = n - 1; i >= 0; i--) {
-            for (int j = i - 1; j >= 0 ; j--) {
+         for (unsigned int i = 3; i < particles.size(); i++) {
+            for (unsigned int j = 2; j < i; j++) {
                double ans_ij = energyStore[i]
                                * energyStore[j]
                                * angleStore[i][j];
-               for (int k = j - 1; k >= 0; k--) {
+               for (unsigned int k = 1; k < j; k++) {
                   double ans_ijk = ans_ij
                                  * energyStore[k]
                                  * angleStore[i][k]
                                  * angleStore[j][k];
-                  for (int l = k - 1; l >= 0; l--) {
+                  for (unsigned int l = 0; l < k; l++) {
                      answer += ans_ijk
                                        * energyStore[l]
                                        * angleStore[i][l]
@@ -167,6 +179,27 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
                }
             }
          } 
+         // // new method
+         // for (int i = n - 1; i >= 0; i--) {
+         //    for (int j = i - 1; j >= 0 ; j--) {
+         //       double ans_ij = energyStore[i]
+         //                       * energyStore[j]
+         //                       * angleStore[i][j];
+         //       for (int k = j - 1; k >= 0; k--) {
+         //          double ans_ijk = ans_ij
+         //                         * energyStore[k]
+         //                         * angleStore[i][k]
+         //                         * angleStore[j][k];
+         //          for (int l = k - 1; l >= 0; l--) {
+         //             answer += ans_ijk
+         //                               * energyStore[l]
+         //                               * angleStore[i][l]
+         //                               * angleStore[j][l]
+         //                               * angleStore[k][l];
+         //          }
+         //       }
+         //    }
+         // } 
 
       
       } else {
@@ -179,12 +212,12 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
             for (unsigned int j = i + 1; j < particles.size(); j++) {
                double ans_ij = energy(particles[i])
                                * energy(particles[j])
-                               * pow(angleSquared(particles[i],particles[j]), _beta/2.0);
+                               * pow(angleSquared(particles[i],particles[j]), half_beta);
                for (unsigned int k = j + 1; k < particles.size(); k++) {
                   answer += ans_ij
                             * energy(particles[k])
-                            * pow(angleSquared(particles[i],particles[k]), _beta/2.0)
-                            * pow(angleSquared(particles[j],particles[k]), _beta/2.0);
+                            * pow(angleSquared(particles[i],particles[k]), half_beta)
+                            * pow(angleSquared(particles[j],particles[k]), half_beta);
                }
             }
          }
@@ -193,18 +226,18 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
             for (unsigned int j = i + 1; j < particles.size(); j++) {
                double ans_ij = energy(particles[i])
                                * energy(particles[j])
-                               * pow(angleSquared(particles[i],particles[j]), _beta/2.0);
+                               * pow(angleSquared(particles[i],particles[j]), half_beta);
                for (unsigned int k = j + 1; k < particles.size(); k++) {
                   double ans_ijk = ans_ij
                                    * energy(particles[k])
-                                   * pow(angleSquared(particles[i],particles[k]), _beta/2.0)
-                                   * pow(angleSquared(particles[j],particles[k]), _beta/2.0);
+                                   * pow(angleSquared(particles[i],particles[k]), half_beta)
+                                   * pow(angleSquared(particles[j],particles[k]), half_beta);
                   for (unsigned int l = k + 1; l < particles.size(); l++) {
                      answer += ans_ijk
                                * energy(particles[l])
-                               * pow(angleSquared(particles[i],particles[l]), _beta/2.0)
-                               * pow(angleSquared(particles[j],particles[l]), _beta/2.0)
-                               * pow(angleSquared(particles[k],particles[l]), _beta/2.0);
+                               * pow(angleSquared(particles[i],particles[l]), half_beta)
+                               * pow(angleSquared(particles[j],particles[l]), half_beta)
+                               * pow(angleSquared(particles[k],particles[l]), half_beta);
                   }
                }
             }
