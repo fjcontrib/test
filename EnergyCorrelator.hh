@@ -85,7 +85,7 @@ public:
                    ///< but has only O(n) memory usage for n particles
     
     storage_array  /// the interparticle angles are cached. This gives a significant speed
-                   /// improvement for N>=3, but has a memory requirement of (8n^2) bytes.
+                   /// improvement for N>=3, but has a memory requirement of (4n^2) bytes.
   };
 
 public:
