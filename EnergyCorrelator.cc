@@ -70,7 +70,10 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
    // Now deal with N = 3 and N = 4.  Different options if storage array is used or not.  
    if (_strategy == storage_array) {
    
-         // For N > 2, fill static storage array to save computation time.
+      // For N > 2, fill static storage array to save computation time.
+
+      // we'll need the (signed) integer number of particles
+      int n = particles.size();
 
       // Make energy storage
       std::vector<double> energyStore;
@@ -88,18 +91,33 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
          energyStore[i] = energy(particles[i]);
          for (unsigned int j = i+1; j < particles.size(); j++) {
             angleStore[i][j] = pow(angleSquared(particles[i],particles[j]), _beta/2.0);
-            angleStore[j][i] = NAN; // no need to store other size.
+            //angleStore[j][i] = NAN; // no need to store other size.
+            angleStore[j][i] = angleStore[i][j]; // no need to store other size.
          }
       }
 
       // now do recursion
       if (_N == 3) {
-         for (unsigned int i = 0; i < particles.size(); i++) {
-            for (unsigned int j = i + 1; j < particles.size(); j++) {
+         // for (unsigned int i = 0; i < particles.size(); i++) {
+         //    for (unsigned int j = i + 1; j < particles.size(); j++) {
+         //       double ans_ij = energyStore[i]
+         //                       * energyStore[j]
+         //                       * angleStore[i][j];
+         //       for (unsigned int k = j + 1; k < particles.size(); k++) {
+         //          answer += ans_ij
+         //                    * energyStore[k]
+         //                    * angleStore[i][k]
+         //                    * angleStore[j][k];
+         //       }
+         //    }
+         // } 
+         // new method
+         for (int i = n - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= 0 ; j--) {
                double ans_ij = energyStore[i]
                                * energyStore[j]
                                * angleStore[i][j];
-               for (unsigned int k = j + 1; k < particles.size(); k++) {
+               for (int k = j - 1; k >= 0; k--) {
                   answer += ans_ij
                             * energyStore[k]
                             * angleStore[i][k]
@@ -108,17 +126,38 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
             }
          }       
       } else if (_N == 4) {
-         for (unsigned int i = 0; i < particles.size(); i++) {
-            for (unsigned int j = i + 1; j < particles.size(); j++) {
+         // for (unsigned int i = 0; i < particles.size(); i++) {
+         //    for (unsigned int j = i + 1; j < particles.size(); j++) {
+         //       double ans_ij = energyStore[i]
+         //                       * energyStore[j]
+         //                       * angleStore[i][j];
+         //       for (unsigned int k = j + 1; k < particles.size(); k++) {
+         //          double ans_ijk = ans_ij
+         //                         * energyStore[k]
+         //                         * angleStore[i][k]
+         //                         * angleStore[j][k];
+         //          for (unsigned int l = k + 1; l < particles.size(); l++) {
+         //             answer += ans_ijk
+         //                               * energyStore[l]
+         //                               * angleStore[i][l]
+         //                               * angleStore[j][l]
+         //                               * angleStore[k][l];
+         //          }
+         //       }
+         //    }
+         // } 
+         // new method
+         for (int i = n - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= 0 ; j--) {
                double ans_ij = energyStore[i]
                                * energyStore[j]
                                * angleStore[i][j];
-               for (unsigned int k = j + 1; k < particles.size(); k++) {
+               for (int k = j - 1; k >= 0; k--) {
                   double ans_ijk = ans_ij
                                  * energyStore[k]
                                  * angleStore[i][k]
                                  * angleStore[j][k];
-                  for (unsigned int l = k + 1; l < particles.size(); l++) {
+                  for (int l = k - 1; l >= 0; l--) {
                      answer += ans_ijk
                                        * energyStore[l]
                                        * angleStore[i][l]
