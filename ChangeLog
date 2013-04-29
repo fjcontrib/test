@@ -3,15 +3,25 @@
 	* Doxyfile:  *** ADDED ***
 
 	* EnergyCorrelator.hh|cc:
-	worked on doxygen-style comments and moved some bits of code into
+	Implemented description() for all three classes.
+	Worked on doxygen-style comments and moved some bits of code into
 	the .cc file.
+
+2013-04-26 + 04-27 Jesse Thaler <jthaler@MIT.EDU>
+
+	* EnergyCorrelator.hh|cc:
+	added temporary storage array for interparticle angles, to speed
+	up the energy correlator calculation for N>2
+
+        * example.cc
+	has internal option for printing out timing info.
 
 2013-04-26  Gavin Salam  <gavin.salam@cern.ch> + Jesse & Andrew
 
-	* Makefile: 
+	* Makefile:
 	added explicit dependencies
 
-	* example.cc (analyze): 
+	* example.cc (analyze):
 	added a little bit of commented code for timing tests.
 
 2013-03-10 <jthaler>

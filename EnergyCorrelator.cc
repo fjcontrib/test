@@ -22,6 +22,8 @@
 //----------------------------------------------------------------------
 
 #include "EnergyCorrelator.hh"
+#include <sstream>
+using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
@@ -207,6 +209,43 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
       return NAN;
    }
 }
+
+string EnergyCorrelator::description_parameters() const {
+  ostringstream oss;
+  oss << "N=" << _N << ", beta = " << _beta;
+
+  if      (_measure == pt_R)    oss << ", pt_R measure";
+  else if (_measure == E_theta) oss << ", E_theta measure";
+  else throw Error("unrecognized measure");
+
+  if      (_strategy == slow)   oss << " and 'slow' strategy";
+  else if (_strategy == storage_array)   oss << " and 'storage_array' strategy";
+  else throw Error("unrecognized strategy");
+
+  return oss.str();
+}
+
+string EnergyCorrelator::description() const {
+  ostringstream oss;
+  oss << "Energy Correlator ECF(N,beta) for ";
+  oss << description_parameters();
+  return oss.str();
+}
+
+string EnergyCorrelatorRatio::description() const {
+  ostringstream oss;
+  oss << "Energy Correlator ratio ECF(N+1,beta)/ECF(N,beta) for ";
+  oss << EnergyCorrelator(_N,_beta,_measure,_strategy).description_parameters();
+  return oss.str();
+}
+
+string EnergyCorrelatorDoubleRatio::description() const {
+  ostringstream oss;
+  oss << "Energy Correlator double ratio ECF(N-1,beta)ECF(N+1,beta)/ECF(N,beta)^2 for ";
+  oss << EnergyCorrelator(_N,_beta,_measure,_strategy).description_parameters();
+  return oss.str();
+}
+
 
 
 

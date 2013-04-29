@@ -46,8 +46,11 @@ namespace contrib{
 /// - EnergyCorrelatorRatio
 /// - EnergyCorrelatorDoubleRatio
 ///
-/// each of which is a FastJet FunctionOfPseudoJet.
-
+/// each of which is a FastJet
+/// FunctionOfPseudoJet. EnergyCorrelatorDoubleRatio in particular is
+/// useful for quark/gluon discrimination and boosted object tagging.
+///
+/// See the file example.cc for an illustration of usage.
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelator
@@ -98,11 +101,15 @@ public:
   /// destructor
   virtual ~EnergyCorrelator(){}
   
-  /// this returns the value of the energy correlator for a jet's
+  /// returns the value of the energy correlator for a jet's
   /// constituents. (Normally accessed by the parent class's
   /// operator()).
   double result(const PseudoJet& jet) const;
 
+  std::string description() const;
+
+  /// returns the the part of the description related to the parameters
+  std::string description_parameters() const;
 
 private:
 
@@ -122,7 +129,7 @@ private:
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorRatio
-/// Calculates the ratio of (N+1)-point to N-point energy correlators, 
+/// A class to calculate the ratio of (N+1)-point to N-point energy correlators, 
 ///     ECF(N+1,beta)/ECF(N,beta), 
 /// called \f$ r_N^{(\beta)} \f$ in the publication. 
 class EnergyCorrelatorRatio : public FunctionOfPseudoJet<double> {
@@ -145,6 +152,8 @@ public:
   /// constituents. (Normally accessed by the parent class's
   /// operator()).
   double result(const PseudoJet& jet) const;
+
+  std::string description() const;
   
 private:
 
@@ -170,20 +179,18 @@ inline double EnergyCorrelatorRatio::result(const PseudoJet& jet) const {
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorDoubleRatio
-/// Calculates ECF(N-1,beta)*ECP(N+1)/ECF(N,beta)^2.
+/// Calculates the double ratio of energy correlators, ECF(N-1,beta)*ECF(N+1)/ECF(N,beta)^2.
 ///
-/// EnergyCorrelatorDoubleRatio(int N, double beta, Measure measure)
-/// Called C_N^(beta) in the publication, equal to r_N/r_{N-1}.
-/// This is the recommended function for boosted N-prong object discrimination.
-/// (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
+/// A class to calculate a double ratio of energy correlators, 
+///     ECF(N-1,beta)*ECF(N+1)/ECF(N,beta)^2, 
+/// called \f$C_N^{(\beta)}\f$ in the publication, and equal to 
+/// \f$ r_N^{(\beta)}/r_{N-1}^{(\beta)} \f$.  
+///
+/// Of the different energy correlator classes, this is the one
+/// recommended for quark/gluon discrimination (N=1) and for boosted
+/// N-prong object discrimination (N=2 for boosted W/Z/H, N=3 for
+/// boosted top).
 class EnergyCorrelatorDoubleRatio : public FunctionOfPseudoJet<double> {
-
-private:
-
-   int _N;
-   double _beta;
-   EnergyCorrelator::Measure _measure;
-   EnergyCorrelator::Strategy _strategy;
 
 public:
 
@@ -193,10 +200,23 @@ public:
                               EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) 
     : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
 
-   virtual ~EnergyCorrelatorDoubleRatio() {}
+  virtual ~EnergyCorrelatorDoubleRatio() {}
    
    
-   double result(const PseudoJet& jet) const;
+  /// returns the value of the energy correlator double-ratio for a
+  /// jet's constituents. (Normally accessed by the parent class's
+  /// operator()).
+  double result(const PseudoJet& jet) const;
+
+  std::string description() const;
+
+private:
+
+   int _N;
+   double _beta;
+   EnergyCorrelator::Measure _measure;
+   EnergyCorrelator::Strategy _strategy;
+
 
 };
 
