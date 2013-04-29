@@ -65,11 +65,11 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
    // if N > 4, then throw error
    if (_N > 5) {
       std::cerr << "ERROR:  EnergyCorrelator is only hard coded for N = 0,1,2,3,4,5"  << std::endl;
-      assert(_N <= 4);
+      assert(_N <= 5);
    }
 
    
-   // Now deal with N = 3 and N = 4.  Different options if storage array is used or not.  
+   // Now deal with N = 3,4,5.  Different options if storage array is used or not.  
    if (_strategy == storage_array) {
    
       // For N > 2, fill static storage array to save computation time.
@@ -153,15 +153,14 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
                                   * angleStore[j][m]
                                   * angleStore[k][m]
                                   * angleStore[l][m];
-                  }                  
-                     
+                     }                  
                   }
                }
             }
          } 
       
       } else {
-         assert(_N <= 4);
+         assert(_N <= 5);
       }
 
    } else if (_strategy == slow) {
@@ -230,7 +229,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
             }
          }
       } else {
-         assert(_N <= 4);
+         assert(_N <= 5);
       } 
    } else {
       assert(false);
