@@ -1,3 +1,11 @@
+2013-04-29  Gavin Salam  <gavin.salam@cern.ch>
+
+	* Doxyfile:  *** ADDED ***
+
+	* EnergyCorrelator.hh|cc:
+	worked on doxygen-style comments and moved some bits of code into
+	the .cc file.
+
 2013-04-26  Gavin Salam  <gavin.salam@cern.ch> + Jesse & Andrew
 
 	* Makefile: 

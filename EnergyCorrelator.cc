@@ -27,7 +27,6 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 namespace contrib{
 
-
 double EnergyCorrelator::result(const PseudoJet& jet) const {
 
    // get N = 0 case out of the way
@@ -177,6 +176,39 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
    
    return answer;
 }
+
+double EnergyCorrelator::energy(const PseudoJet& jet) const {
+   if (_measure == pt_R) {
+      return jet.perp();
+   }  else if (_measure == E_theta) {
+      return jet.e();
+   } else {
+      assert(false);
+      return NAN;
+   }
+}
+
+double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
+   if (_measure == pt_R) {
+      return jet1.squared_distance(jet2);
+   } else if (_measure == E_theta) {
+      // doesn't seem to be a fastjet built in for this
+      double dot = jet1.px()*jet2.px() + jet1.py()*jet2.py() + jet1.pz()*jet2.pz();
+      double norm1 = sqrt(jet1.px()*jet1.px() + jet1.py()*jet1.py() + jet1.pz()*jet1.pz());
+      double norm2 = sqrt(jet2.px()*jet2.px() + jet2.py()*jet2.py() + jet2.pz()*jet2.pz());
+      
+      double costheta = dot/(norm1 * norm2);
+      if (costheta > 1.0) costheta = 1.0; // Need to handle case of numerical overflow
+      double theta = acos(costheta);
+      return theta*theta;    
+        
+   } else {
+      assert(false);
+      return NAN;
+   }
+}
+
+
 
 } // namespace contrib
 

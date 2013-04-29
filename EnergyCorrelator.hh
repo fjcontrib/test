@@ -34,27 +34,75 @@ FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
 namespace contrib{
 
+/// \mainpage EnergyCorrelator contrib
+/// 
+/// The EnergyCorrelator contrib provides an implementation of energy
+/// correlators and their ratios as described in arXiv:1305.XXXX by
+/// Larkoski, Salam and Thaler.
+///
+/// <p>There are three main classes:
+///
+/// - EnergyCorrelator
+/// - EnergyCorrelatorRatio
+/// - EnergyCorrelatorDoubleRatio
+///
+/// each of which is a FastJet FunctionOfPseudoJet.
+
+
 //------------------------------------------------------------------------
 /// \class EnergyCorrelator
-/// Calculates ECF(N,beta).
+/// ECF(N,beta) is the N-point energy correlation function, with an angular exponent beta.
+/// 
+/// It is defined as follows for N up to 4
 ///
-/// EnergyCorrelator(int N, double beta, Measure measure)
-/// Called ECF(N,beta) in the publication.
-/// N is the multiplicity, beta is the angular exponent, and
-/// measure = pt_R (default) or E_theta sets how energies and angles are determined.
+///  - ECF(1,\f$ \beta)  = \sum_i E_i \f$
+///  - ECF(2,\f$ \beta)  = \sum_{i<j} E_i E_j \theta_{ij}^\beta \f$
+///  - ECF(3,\f$ \beta)  = \sum_{i<j<k} E_i E_j E_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
+///  - ECF(4,\f$ \beta)  = \sum_{i<j<k<l} E_i E_j E_k E_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
+///
+/// The correlation can be determined with energies and angles (as
+/// given above) or with transverse momenta and boost invariant angles
+/// (the code's default). The choice is controlled by
+/// EnergyCorrelator::Measure provided in the constructor.
 class EnergyCorrelator : public FunctionOfPseudoJet<double> {
 
 public:
 
   enum Measure {
-    pt_R,
-    E_theta
+    pt_R,     ///< use transverse momenta and boost-invariant angles, 
+              ///< eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} p_{ti} p_{tj} \Delta R_{ij}^{\beta} \f$
+    E_theta   ///  use energies and angles, 
+              ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
   };
 
   enum Strategy {
-    slow,
-    storage_array
+    slow,          ///< interparticle angles are not cached. 
+                   ///< For N>=3 this leads to many expensive recomputations, 
+                   ///< but has only O(n) memory usage for n particles
+    
+    storage_array  /// the interparticle angles are cached. This gives a significant speed
+                   /// improvement for N>=3, but has a memory requirement of (8n^2) bytes.
   };
+
+public:
+  
+  /// constructs an N-point correlator with angular exponent beta,
+  /// using the specified choice of energy and angular measure as well
+  /// one of two possible underlying computational Strategy
+  EnergyCorrelator(int N, 
+                   double beta, 
+                   Measure measure = pt_R, 
+                   Strategy strategy = storage_array) : 
+    _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
+
+  /// destructor
+  virtual ~EnergyCorrelator(){}
+  
+  /// this returns the value of the energy correlator for a jet's
+  /// constituents. (Normally accessed by the parent class's
+  /// operator()).
+  double result(const PseudoJet& jet) const;
+
 
 private:
 
@@ -63,43 +111,8 @@ private:
    Measure _measure;
    Strategy _strategy;
 
-   double energy(const PseudoJet& jet) const {
-      if (_measure == pt_R) {
-         return jet.perp();
-      }  else if (_measure == E_theta) {
-         return jet.e();
-      } else {
-         assert(false);
-         return NAN;
-      }
-   }
-   
-   double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
-      if (_measure == pt_R) {
-         return jet1.squared_distance(jet2);
-      } else if (_measure == E_theta) {
-         // doesn't seem to be a fastjet built in for this
-         double dot = jet1.px()*jet2.px() + jet1.py()*jet2.py() + jet1.pz()*jet2.pz();
-         double norm1 = sqrt(jet1.px()*jet1.px() + jet1.py()*jet1.py() + jet1.pz()*jet1.pz());
-         double norm2 = sqrt(jet2.px()*jet2.px() + jet2.py()*jet2.py() + jet2.pz()*jet2.pz());
-         
-         double costheta = dot/(norm1 * norm2);
-         if (costheta > 1.0) costheta = 1.0; // Need to handle case of numerical overflow
-         double theta = acos(costheta);
-         return theta*theta;    
-           
-      } else {
-         assert(false);
-         return NAN;
-      }
-   }
-
-public:
-
-   EnergyCorrelator(int N, double beta, Measure measure = pt_R, Strategy strategy = storage_array) : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
-   ~EnergyCorrelator(){}
-   
-   double result(const PseudoJet& jet) const;
+   double energy(const PseudoJet& jet) const;
+   double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const;
 
 };
 
@@ -109,26 +122,38 @@ public:
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorRatio
-/// Calculates ECF(N+1,beta)/ECF(N,beta).
-///
-/// EnergyCorrelatorRatio(int N, double beta, Measure measure)
-/// Called r_N^(beta) in the publication, equal to ECF(N+1,beta)/ECF(N,beta). 
+/// Calculates the ratio of (N+1)-point to N-point energy correlators, 
+///     ECF(N+1,beta)/ECF(N,beta), 
+/// called \f$ r_N^{(\beta)} \f$ in the publication. 
 class EnergyCorrelatorRatio : public FunctionOfPseudoJet<double> {
 
+public:
+
+  /// constructs an (N+1)-point to N-point correlator ratio with
+  /// angular exponent beta, using the specified choice of energy and
+  /// angular measure as well one of two possible underlying
+  /// computational strategies
+  EnergyCorrelatorRatio(int N, 
+                        double  beta, 
+                        EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R, 
+                        EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) 
+    : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
+
+  virtual ~EnergyCorrelatorRatio() {}
+   
+  /// returns the value of the energy correlator ratio for a jet's
+  /// constituents. (Normally accessed by the parent class's
+  /// operator()).
+  double result(const PseudoJet& jet) const;
+  
 private:
 
    int _N;
    double _beta;
+
    EnergyCorrelator::Measure _measure;
    EnergyCorrelator::Strategy _strategy;
 
-public:
-
-   EnergyCorrelatorRatio(int N, double beta, EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R, EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
-   ~EnergyCorrelatorRatio() {}
-   
-   
-   double result(const PseudoJet& jet) const;
 
 };
 
@@ -162,8 +187,13 @@ private:
 
 public:
 
-   EnergyCorrelatorDoubleRatio(int N, double beta, EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R,  EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
-   ~EnergyCorrelatorDoubleRatio() {}
+  EnergyCorrelatorDoubleRatio(int N, 
+                              double beta, 
+                              EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R,  
+                              EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array) 
+    : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
+
+   virtual ~EnergyCorrelatorDoubleRatio() {}
    
    
    double result(const PseudoJet& jet) const;
