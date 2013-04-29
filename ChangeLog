@@ -1,3 +1,11 @@
+2013-04-29 Jesse Thaler
+
+	* EnergyCorrelator.cc
+	- Added support for N = 5
+
+	* example.cc
+	- Added N = 5 to test suite.
+
 2013-04-29  Gavin Salam  <gavin.salam@cern.ch>
 
 	* EnergyCorrelator.hh|cc:

@@ -63,8 +63,8 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
    
 
    // if N > 4, then throw error
-   if (_N > 4) {
-      std::cerr << "ERROR:  EnergyCorrelator is only hard coded for N = 0,1,2,3,4"  << std::endl;
+   if (_N > 5) {
+      std::cerr << "ERROR:  EnergyCorrelator is only hard coded for N = 0,1,2,3,4,5"  << std::endl;
       assert(_N <= 4);
    }
 
@@ -129,6 +129,36 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
                }
             }
          } 
+      } else if (_N == 5) {
+         for (unsigned int i = 4; i < particles.size(); i++) {
+            for (unsigned int j = 3; j < i; j++) {
+               double ans_ij = energyStore[i]
+                               * energyStore[j]
+                               * angleStore[i][j];
+               for (unsigned int k = 2; k < j; k++) {
+                  double ans_ijk = ans_ij
+                                 * energyStore[k]
+                                 * angleStore[i][k]
+                                 * angleStore[j][k];
+                  for (unsigned int l = 1; l < k; l++) {
+                     double ans_ijkl = ans_ijk
+                                       * energyStore[l]
+                                       * angleStore[i][l]
+                                       * angleStore[j][l]
+                                       * angleStore[k][l];
+                     for (unsigned int m = 0; m < l; m++) {
+                        answer += ans_ijkl
+                                  * energyStore[m]
+                                  * angleStore[i][m]
+                                  * angleStore[j][m]
+                                  * angleStore[k][m]
+                                  * angleStore[l][m];
+                  }                  
+                     
+                  }
+               }
+            }
+         } 
       
       } else {
          assert(_N <= 4);
@@ -166,6 +196,35 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
                                * pow(angleSquared(particles[i],particles[l]), half_beta)
                                * pow(angleSquared(particles[j],particles[l]), half_beta)
                                * pow(angleSquared(particles[k],particles[l]), half_beta);
+                  }
+               }
+            }
+         }
+      } else if (_N == 5) {
+         for (unsigned int i = 0; i < particles.size(); i++) {
+            for (unsigned int j = i + 1; j < particles.size(); j++) {
+               double ans_ij = energy(particles[i])
+                               * energy(particles[j])
+                               * pow(angleSquared(particles[i],particles[j]), half_beta);
+               for (unsigned int k = j + 1; k < particles.size(); k++) {
+                  double ans_ijk = ans_ij
+                                   * energy(particles[k])
+                                   * pow(angleSquared(particles[i],particles[k]), half_beta)
+                                   * pow(angleSquared(particles[j],particles[k]), half_beta);
+                  for (unsigned int l = k + 1; l < particles.size(); l++) {
+                     double ans_ijkl = ans_ijk
+                               * energy(particles[l])
+                               * pow(angleSquared(particles[i],particles[l]), half_beta)
+                               * pow(angleSquared(particles[j],particles[l]), half_beta)
+                               * pow(angleSquared(particles[k],particles[l]), half_beta);
+                     for (unsigned int m = l + 1; m < particles.size(); m++) {
+                        answer += ans_ijkl
+                                  * energy(particles[m])
+                                  * pow(angleSquared(particles[i],particles[m]), half_beta)
+                                  * pow(angleSquared(particles[j],particles[m]), half_beta)
+                                  * pow(angleSquared(particles[k],particles[m]), half_beta)
+                                  * pow(angleSquared(particles[l],particles[m]), half_beta);
+                     }
                   }
                }
             }
