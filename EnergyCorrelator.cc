@@ -4,6 +4,7 @@
 //  Copyright (c) 2013
 //  Andrew Larkoski, Gavin Salam, and Jesse Thaler
 //
+//  $Id$
 //----------------------------------------------------------------------
 // This file is part of FastJet contrib.
 //

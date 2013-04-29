@@ -1,9 +1,13 @@
+#ifndef __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
+#define __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
+
 //  EnergyCorrelator Package
 //  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
 //
 //  Copyright (c) 2013
 //  Andrew Larkoski, Gavin Salam, and Jesse Thaler
 //
+//  $Id$
 //----------------------------------------------------------------------
 // This file is part of FastJet contrib.
 //
@@ -20,9 +24,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this code. If not, see <http://www.gnu.org/licenses/>.
 //----------------------------------------------------------------------
-
-#ifndef __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
-#define __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
 
 #include <fastjet/internal/base.hh>
 #include "fastjet/FunctionOfPseudoJet.hh"

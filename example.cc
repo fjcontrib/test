@@ -1,7 +1,9 @@
+// Example showing usage of energy correlator classes.
+//
+// Copyright (c) 2013
+// Andrew Larkoski, Gavin Salam, and Jesse Thaler
+//
 // $Id$
-//
-// Copyright (c) -, 
-//
 //----------------------------------------------------------------------
 // This file is part of FastJet contrib.
 //
