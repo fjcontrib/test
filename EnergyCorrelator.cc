@@ -213,7 +213,7 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
 
 string EnergyCorrelator::description_parameters() const {
   ostringstream oss;
-  oss << "N=" << _N << ", beta = " << _beta;
+  oss << "N=" << _N << ", beta=" << _beta;
 
   if      (_measure == pt_R)    oss << ", pt_R measure";
   else if (_measure == E_theta) oss << ", E_theta measure";
