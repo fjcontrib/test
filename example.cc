@@ -24,7 +24,8 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
+//#include <time.h>
+#include <ctime>
 #include <iostream>
 #include <istream>
 #include <fstream>
@@ -179,70 +180,74 @@ void analyze(const vector<PseudoJet> & input_particles) {
             double do_timing_test = false;
             if (do_timing_test) {
             
-               time_t begin, end;
+               cout << "jet with pt = " << myJet.pt() << " and " << myJet.constituents().size() << " constituents" << endl;
+
+               clock_t clock_begin, clock_end;
                double num_iter;
                double beta = 0.5;
 
                cout << setprecision(6);
 
                // test C1
-               num_iter = 100000;
-               time(&begin);
+               num_iter = 20000;
+               clock_begin = clock();
+               EnergyCorrelatorDoubleRatio C1s(1,beta,measurelist[M],EnergyCorrelator::slow);
+               EnergyCorrelatorDoubleRatio C1f(1,beta,measurelist[M],EnergyCorrelator::storage_array);
+               cout << "timing " << C1s.description() << endl;
+               cout << "timing " << C1f.description() << endl;
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C1(1,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
-                  C1(myJet);
+                  C1s(myJet);
                }
-               time(&end);
-               cout << "Slow method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C1"<< endl;
+               clock_end = clock();
+               cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C1"<< endl;
 
-               num_iter = 100000;
-               time(&begin);
+               num_iter = 20000;
+               clock_begin = clock();
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C1(1,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
-                  C1(myJet);
+                  C1f(myJet);
                }
-               time(&end);
-               cout << "Storage array method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C1"<< endl;
-
+               clock_end = clock();
+               cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C1"<< endl;
 
 
                // test C2
-               num_iter = 10000;
-               time(&begin);
+               num_iter = 1000;
+               clock_begin = clock();
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C2(2,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
+                  EnergyCorrelatorDoubleRatio C2(2,beta,measurelist[M],EnergyCorrelator::slow);
                   C2(myJet);
                }
-               time(&end);
-               cout << "Slow method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C2"<< endl;
+               clock_end = clock();
+               cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C2"<< endl;
 
                num_iter = 10000;
-               time(&begin);
+               clock_begin = clock();
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C2(2,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
+                  EnergyCorrelatorDoubleRatio C2(2,beta,measurelist[M],EnergyCorrelator::storage_array);
                   C2(myJet);
                }
-               time(&end);
-               cout << "Storage array method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C2"<< endl;
+               clock_end = clock();
+               cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C2"<< endl;
 
                // test C3
-               num_iter = 1000;
-               time(&begin);
+               num_iter = 100;
+               clock_begin = clock();
+;
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C3(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::slow);
+                  EnergyCorrelatorDoubleRatio C3(3,beta,measurelist[M],EnergyCorrelator::slow);
                   C3(myJet);
                }
-               time(&end);
-               cout << "Slow method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C3"<< endl;
+               clock_end = clock();
+               cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C3"<< endl;
 
-               num_iter = 10000;
-               time(&begin);
+               num_iter = 3000;
+               clock_begin = clock();
                for (int t = 0; t < num_iter; t++) {
-                  EnergyCorrelatorDoubleRatio C3(3,beta,EnergyCorrelator::pt_R,EnergyCorrelator::storage_array);
+                  EnergyCorrelatorDoubleRatio C3(3,beta,measurelist[M],EnergyCorrelator::storage_array);
                   C3(myJet);
                }
-               time(&end);
-               cout << "Storage array method: " << difftime(end, begin)/double(num_iter)*1000 << " ms per C3"<< endl;
+               clock_end = clock();
+               cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C3"<< endl;
 
 
             }
