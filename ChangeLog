@@ -1,11 +1,21 @@
 2013-04-29  Gavin Salam  <gavin.salam@cern.ch>
 
+	* EnergyCorrelator.hh|cc:
+	- reduced memory usage from roughly 8n^2 to 4n^2 bytes (note that
+	  sums are now performed in a different order, so results may
+	  change to within rounding error).
+
+	- Implemented description() for all three classes.
+
+	- Worked on doxygen-style comments and moved some bits of code into
+	  the .cc file.
+
 	* Doxyfile:  *** ADDED ***
 
-	* EnergyCorrelator.hh|cc:
-	Implemented description() for all three classes.
-	Worked on doxygen-style comments and moved some bits of code into
-	the .cc file.
+	* example.cc:
+	developers' timing component now uses clock(), to get
+	finer-grained timing, and also outputs a description for some of
+	the correlators being used.
 
 2013-04-26 + 04-27 Jesse Thaler <jthaler@MIT.EDU>
 

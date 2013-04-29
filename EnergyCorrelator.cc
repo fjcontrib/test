@@ -74,9 +74,6 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
    
       // For N > 2, fill static storage array to save computation time.
 
-      // we'll need the (signed) integer number of particles
-      int n = particles.size();
-
       // Make energy storage
       std::vector<double> energyStore;
       energyStore.resize(particles.size());
@@ -98,19 +95,6 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
 
       // now do recursion
       if (_N == 3) {
-         // for (unsigned int i = 0; i < particles.size(); i++) {
-         //    for (unsigned int j = i + 1; j < particles.size(); j++) {
-         //       double ans_ij = energyStore[i]
-         //                       * energyStore[j]
-         //                       * angleStore[i][j];
-         //       for (unsigned int k = j + 1; k < particles.size(); k++) {
-         //          answer += ans_ij
-         //                    * energyStore[k]
-         //                    * angleStore[i][k]
-         //                    * angleStore[j][k];
-         //       }
-         //    }
-         // } 
          for (unsigned int i = 2; i < particles.size(); i++) {
             for (unsigned int j = 1; j < i; j++) {
                double ans_ij = energyStore[i]
@@ -124,41 +108,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
                }
             }
          } 
-         // // new method
-         // for (int i = n - 1; i >= 0; i--) {
-         //    for (int j = i - 1; j >= 0 ; j--) {
-         //       double ans_ij = energyStore[i]
-         //                       * energyStore[j]
-         //                       * angleStore[i][j];
-         //       for (int k = j - 1; k >= 0; k--) {
-         //          answer += ans_ij
-         //                    * energyStore[k]
-         //                    * angleStore[i][k]
-         //                    * angleStore[j][k];
-         //       }
-         //    }
-         // }       
       } else if (_N == 4) {
-         // for (unsigned int i = 0; i < particles.size(); i++) {
-         //    for (unsigned int j = i + 1; j < particles.size(); j++) {
-         //       double ans_ij = energyStore[i]
-         //                       * energyStore[j]
-         //                       * angleStore[i][j];
-         //       for (unsigned int k = j + 1; k < particles.size(); k++) {
-         //          double ans_ijk = ans_ij
-         //                         * energyStore[k]
-         //                         * angleStore[i][k]
-         //                         * angleStore[j][k];
-         //          for (unsigned int l = k + 1; l < particles.size(); l++) {
-         //             answer += ans_ijk
-         //                               * energyStore[l]
-         //                               * angleStore[i][l]
-         //                               * angleStore[j][l]
-         //                               * angleStore[k][l];
-         //          }
-         //       }
-         //    }
-         // } 
          for (unsigned int i = 3; i < particles.size(); i++) {
             for (unsigned int j = 2; j < i; j++) {
                double ans_ij = energyStore[i]
@@ -179,28 +129,6 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
                }
             }
          } 
-         // // new method
-         // for (int i = n - 1; i >= 0; i--) {
-         //    for (int j = i - 1; j >= 0 ; j--) {
-         //       double ans_ij = energyStore[i]
-         //                       * energyStore[j]
-         //                       * angleStore[i][j];
-         //       for (int k = j - 1; k >= 0; k--) {
-         //          double ans_ijk = ans_ij
-         //                         * energyStore[k]
-         //                         * angleStore[i][k]
-         //                         * angleStore[j][k];
-         //          for (int l = k - 1; l >= 0; l--) {
-         //             answer += ans_ijk
-         //                               * energyStore[l]
-         //                               * angleStore[i][l]
-         //                               * angleStore[j][l]
-         //                               * angleStore[k][l];
-         //          }
-         //       }
-         //    }
-         // } 
-
       
       } else {
          assert(_N <= 4);
