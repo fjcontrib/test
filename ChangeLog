@@ -1,3 +1,8 @@
+2013-04-30  Jesse Thaler
+
+	* EnergyCorrelator.cc
+	Implemented Gregory Soyez's suggestions on errors/asserts
+
 2013-04-30  Gavin Salam  <gavin.salam@cern.ch>
 
 	* VERSION:

@@ -32,6 +32,9 @@ namespace contrib{
 
 double EnergyCorrelator::result(const PseudoJet& jet) const {
 
+   // if jet does not have constituents, throw error
+   if (!jet.has_constituents()) throw Error("EnergyCorrelator called on jet with no constituents.");
+
    // get N = 0 case out of the way
    if (_N == 0) return 1.0;
 
@@ -64,8 +67,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
 
    // if N > 4, then throw error
    if (_N > 5) {
-      std::cerr << "ERROR:  EnergyCorrelator is only hard coded for N = 0,1,2,3,4,5"  << std::endl;
-      assert(_N <= 5);
+      throw Error("EnergyCorrelator is only hard coded for N = 0,1,2,3,4,5");
    }
 
    
@@ -232,7 +234,7 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
          assert(_N <= 5);
       } 
    } else {
-      assert(false);
+      assert(_strategy == slow || _strategy == storage_array);
    }
    
    return answer;
@@ -244,7 +246,7 @@ double EnergyCorrelator::energy(const PseudoJet& jet) const {
    }  else if (_measure == E_theta) {
       return jet.e();
    } else {
-      assert(false);
+      assert(_measure==pt_R || _measure==E_theta);
       return NAN;
    }
 }
@@ -264,7 +266,7 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
       return theta*theta;    
         
    } else {
-      assert(false);
+      assert(_measure==pt_R || _measure==E_theta);
       return NAN;
    }
 }

@@ -182,7 +182,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
             }
             cout << "-------------------------------------------------------------------------------------" << endl << endl;
             
-            
+                        
             // timing tests for the developers
             double do_timing_test = false;
             if (do_timing_test) {
