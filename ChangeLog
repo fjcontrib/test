@@ -1,5 +1,9 @@
 2013-04-30  Gavin Salam  <gavin.salam@cern.ch>
 
+	* VERSION:
+	* NEWS:
+	released v. 1.0.0
+
 	* EnergyCorrelator.hh:
 	* example.cc
 	small changes to documentation to reflect the change below + an
