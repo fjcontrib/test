@@ -1,5 +1,9 @@
 // Example showing usage of energy correlator classes.
 //
+// Compile it with "make example" and run it with
+//
+//   ./example < ../data/single-event.dat
+//
 // Copyright (c) 2013
 // Andrew Larkoski, Gavin Salam, and Jesse Thaler
 //

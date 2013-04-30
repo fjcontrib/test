@@ -57,17 +57,21 @@ namespace contrib{
 /// \class EnergyCorrelator
 /// ECF(N,beta) is the N-point energy correlation function, with an angular exponent beta.
 /// 
-/// It is defined as follows for N up to 4
+/// It is defined as follows 
 ///
 ///  - ECF(1,\f$ \beta)  = \sum_i E_i \f$
 ///  - ECF(2,\f$ \beta)  = \sum_{i<j} E_i E_j \theta_{ij}^\beta \f$
 ///  - ECF(3,\f$ \beta)  = \sum_{i<j<k} E_i E_j E_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
 ///  - ECF(4,\f$ \beta)  = \sum_{i<j<k<l} E_i E_j E_k E_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
+///  - ...
 ///
 /// The correlation can be determined with energies and angles (as
 /// given above) or with transverse momenta and boost invariant angles
 /// (the code's default). The choice is controlled by
 /// EnergyCorrelator::Measure provided in the constructor.
+///
+/// The current implementation handles values of N up to and including 5.
+/// Run times scale as n^N/N!, where n is the number of particles in a jet.
 class EnergyCorrelator : public FunctionOfPseudoJet<double> {
 
 public:

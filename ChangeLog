@@ -1,3 +1,10 @@
+2013-04-30  Gavin Salam  <gavin.salam@cern.ch>
+
+	* EnergyCorrelator.hh:
+	* example.cc
+	small changes to documentation to reflect the change below + an
+	gave an explicit command-line in the example.
+
 2013-04-29 Jesse Thaler
 
 	* EnergyCorrelator.cc
