@@ -24,6 +24,7 @@
 
 #include "EnergyCorrelator.hh"
 #include <sstream>
+#include <limits>
 using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
@@ -247,7 +248,7 @@ double EnergyCorrelator::energy(const PseudoJet& jet) const {
       return jet.e();
    } else {
       assert(_measure==pt_R || _measure==E_theta);
-      return NAN;
+      return std::numeric_limits<double>::quiet_NaN();
    }
 }
 
@@ -267,7 +268,7 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
         
    } else {
       assert(_measure==pt_R || _measure==E_theta);
-      return NAN;
+      return std::numeric_limits<double>::quiet_NaN();
    }
 }
 
