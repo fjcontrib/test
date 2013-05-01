@@ -4,15 +4,25 @@ The EnergyCorrelator package is based on the physics described in:
    Andrew J. Larkoski, Gavin Salam, and Jesse Thaler.
    arXiv:1305.xxxx.
 
-There are three FunctionOfPseudoJet in this package:
+This FastJet-contrib package contains three classes derived from
+FunctionOfPseudoJet<double> :
 
-EnergyCorrelator(int N, double beta, ecmode mode)
-  Called ECF(N,beta) in the publication.  N is the multiplicity, beta is the angular exponent, and mode = pT_R (default) or E_Omega sets how energies and angles are determined.
+EnergyCorrelator(int N, double beta, Measure measure)
 
-EnergyCorrelatorRatio(int N, double beta, ecmode mode)
-  Called r_N^(beta) in the publication.  Equals ECF(N+1,beta)/ECF(N,beta).
+  Called ECF(N,beta) in the publication.  Corresponds to the N-point
+  correlation function, with beta the angular exponent, while measure
+  = pt_R (default) or E_theta sets how energies and angles are
+  determined.
 
-EnergyCorrelatorDoubleRatio(int N, double beta, ecmode mode)
-  Called C_N^(beta) in the publication.  Equals r_N/r_{N-1}.  This is the recommended function for boosted N-prong object discrimination.  (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
+EnergyCorrelatorRatio(int N, double beta, Measure measure)
+
+  Called r_N^(beta) in the publication.  
+  Equals ECF(N+1,beta)/ECF(N,beta).
+
+EnergyCorrelatorDoubleRatio(int N, double beta, Measure measure)
+
+  Called C_N^(beta) in the publication.  Equals r_N/r_{N-1}.  This is
+  the recommended function for boosted N-prong object discrimination.
+  (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
 
 Usage is shown in the example.cc program.
