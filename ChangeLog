@@ -1,3 +1,8 @@
+2013-05-01  Jesse Thaler
+
+	* EnergyCorrelator.cc
+	Switched from NAN to std::numeric_limits<double>::quiet_NaN()
+
 2013-04-30  Jesse Thaler
 
 	* EnergyCorrelator.cc

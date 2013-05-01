@@ -2,7 +2,7 @@ The EnergyCorrelator package is based on the physics described in:
 
    Energy Correlation Functions for Jet Substructure.
    Andrew J. Larkoski, Gavin Salam, and Jesse Thaler.
-   arXiv:1203.soon.
+   arXiv:1305.xxxx.
 
 There are three FunctionOfPseudoJet in this package:
 
