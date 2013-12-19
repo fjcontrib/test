@@ -82,7 +82,7 @@ public:
     E_theta,    ///  use energies and angles, 
                 ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
     lorentz_dot ///  use dot product inspired measure
-                ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   (2 \sin (\theta_{ij}/2))^{\beta/2} \f$
+                ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   (2 \sin (\theta_{ij}/2))^{\beta} \f$
   };
 
   enum Strategy {
