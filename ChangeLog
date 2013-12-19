@@ -1,3 +1,9 @@
+2013-12-18  Jesse Thaler
+
+	* EnergyCorrelator.cc
+	* EnergyCorrelator.hh
+	Added new lorentz_dot Measure in EnergyCorrelator
+
 2013-05-01  Gavin Salam  <gavin.salam@cern.ch>
 
 	* VERSION:

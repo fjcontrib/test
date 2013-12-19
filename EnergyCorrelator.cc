@@ -244,10 +244,10 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
 double EnergyCorrelator::energy(const PseudoJet& jet) const {
    if (_measure == pt_R) {
       return jet.perp();
-   }  else if (_measure == E_theta) {
+   }  else if (_measure == E_theta || _measure==lorentz_dot) {
       return jet.e();
    } else {
-      assert(_measure==pt_R || _measure==E_theta);
+      assert(_measure==pt_R || _measure==E_theta || _measure==lorentz_dot);
       return std::numeric_limits<double>::quiet_NaN();
    }
 }
@@ -265,7 +265,9 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
       if (costheta > 1.0) costheta = 1.0; // Need to handle case of numerical overflow
       double theta = acos(costheta);
       return theta*theta;    
-        
+   } else if (_measure == lorentz_dot) {
+      double dotproduct = dot_product(jet1,jet2);
+      return 2.0 * dotproduct / (jet1.e() * jet2.e());
    } else {
       assert(_measure==pt_R || _measure==E_theta);
       return std::numeric_limits<double>::quiet_NaN();

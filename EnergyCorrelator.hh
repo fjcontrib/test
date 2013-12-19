@@ -77,10 +77,12 @@ class EnergyCorrelator : public FunctionOfPseudoJet<double> {
 public:
 
   enum Measure {
-    pt_R,     ///< use transverse momenta and boost-invariant angles, 
-              ///< eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} p_{ti} p_{tj} \Delta R_{ij}^{\beta} \f$
-    E_theta   ///  use energies and angles, 
-              ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
+    pt_R,       ///< use transverse momenta and boost-invariant angles, 
+                ///< eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} p_{ti} p_{tj} \Delta R_{ij}^{\beta} \f$
+    E_theta,    ///  use energies and angles, 
+                ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
+    lorentz_dot ///  use dot product inspired measure
+                ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   (2 \sin (\theta_{ij}/2))^{\beta/2} \f$
   };
 
   enum Strategy {
