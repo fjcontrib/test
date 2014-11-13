@@ -2,9 +2,10 @@ The EnergyCorrelator package is based on the physics described in:
 
    Energy Correlation Functions for Jet Substructure.
    Andrew J. Larkoski, Gavin Salam, and Jesse Thaler.
+   JHEP 1306, 108 (2013)
    arXiv:1305.0007.
 
-Additional information and new observables formed from the 
+Additional information and a new observable formed from the 
 energy correlation functions was described in
 
    Power Counting to Better Jet Observables.
@@ -32,10 +33,34 @@ EnergyCorrelatorDoubleRatio(int N, double beta, Measure measure)
   observable provides good boosted N-prong object discrimination.
   (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
 
+EnergyCorrelatorC1(double beta, Measure measure)
+
+  This calculates the double ratio observable C_1^(beta) which is
+  useful for quark versus gluon discrimiantion.
+
+EnergyCorrelatorC2(double beta, Measure measure)
+
+  This calculates the double ratio observable C_2^(beta) which is
+  useful for boosted W/Z/H identification.
+
 EnergyCorrelatorD2(double beta, Measure measure)
 
-  Called D_2^(beta) in arXiv:1409.6298.  Equals ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3.  
+  Called D_2^(beta) in arXiv:1409.6298.  
+  Equals ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3.  
   This is the recommended function for boosted 2-prong object discrimination 
   (boosted W/Z/H).
+
+The argument Measure in each of these functions sets how energies and 
+angles are defined in the observable.  The measure 
+  
+  pt_R
+
+uses hadron collider coordinates (transverse momenta and boost-invariant 
+angles).  The measure
+
+  E_theta
+
+uses particle energies and angles and is appropriate for e+e-
+collider applications.
 
 Usage is shown in the example.cc program.

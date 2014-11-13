@@ -181,18 +181,47 @@ void analyze(const vector<PseudoJet> & input_particles) {
                printf("%7.3f %14.6f %14.6f %14.6f %14.6f \n",beta,C1(myJet),C2(myJet),C3(myJet),C4(myJet));
             }
             cout << "-------------------------------------------------------------------------------------" << endl << endl;
-            
+ 
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            cout << "EnergyCorrelatorC1:  C_1^(beta) = ECF(2,beta)/ECF(1,beta)^2 with " << modename[M] << endl;
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            printf("%7s %14s \n","beta","C1 obs");
+
+            for (unsigned int B = 0; B < betalist.size(); B++) {
+               double beta = betalist[B];
+
+               EnergyCorrelatorC1 c1(beta,measurelist[M]);
+
+               printf("%7.3f %14.6f \n",beta,c1(myJet));
+            }
+            cout << "-------------------------------------------------------------------------------------" << endl << endl;
+
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            cout << "EnergyCorrelatorC2:  C_2^(beta) = ECF(3,beta)*ECF(1,beta)/ECF(2,beta)^2 with " << modename[M] << endl;
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            printf("%7s %14s \n","beta","C2 obs");
+
+            for (unsigned int B = 0; B < betalist.size(); B++) {
+               double beta = betalist[B];
+
+               EnergyCorrelatorC2 c2(beta,measurelist[M]);
+
+               printf("%7.3f %14.6f \n",beta,c2(myJet));
+            }
+            cout << "-------------------------------------------------------------------------------------" << endl << endl;
+
+           
             cout << "-------------------------------------------------------------------------------------" << endl;
             cout << "EnergyCorrelatorD2:  D_2^(beta) = ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3 with " << modename[M] << endl;
             cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %8s \n","beta","D2 obs");
+            printf("%7s %14s \n","beta","D2 obs");
 
             for (unsigned int B = 0; B < betalist.size(); B++) {
                double beta = betalist[B];
 
                EnergyCorrelatorD2 d2(beta,measurelist[M]);
 
-               printf("%7.3f %8.4f \n",beta,d2(myJet));
+               printf("%7.3f %14.6f \n",beta,d2(myJet));
             }
             cout << "-------------------------------------------------------------------------------------" << endl << endl; 
 

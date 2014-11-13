@@ -2,7 +2,7 @@
 
 	*VERSION:
 	*NEWS:
-        release of version 1.0.2
+        release of version 1.0.2-beta1
 
 	*AUTHORS:
 	*COPYING:
@@ -11,10 +11,10 @@
 
 	*EnergyCorrelator.cc
 	*EnergyCorrelator.hh
-	added code to calculate D2 observable.
+	added code to calculate C1, C2, and D2 observables.
 
 	*example.cc
-	added calculation of D2 to example file.
+	added calculation of C1, C2, and D2 to example file.
 
 2013-05-01  Gavin Salam  <gavin.salam@cern.ch>
 

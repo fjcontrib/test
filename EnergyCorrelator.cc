@@ -310,7 +310,21 @@ string EnergyCorrelatorDoubleRatio::description() const {
 
 string EnergyCorrelatorD2::description() const {
   ostringstream oss;
-  oss << "Energy Correlator observable D2 ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^2 for ";
+  oss << "Energy Correlator observable D2 ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3 for ";
+  oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_parameters();
+  return oss.str();
+}
+
+string EnergyCorrelatorC1::description() const {
+  ostringstream oss;
+  oss << "Energy Correlator observable C1 ECF(2,beta)/ECF(1,beta)^2 for ";
+  oss << EnergyCorrelator(2,_beta,_measure,_strategy).description_parameters();
+  return oss.str();
+}
+
+string EnergyCorrelatorC2::description() const {
+  ostringstream oss;
+  oss << "Energy Correlator observable C2 ECF(3,beta)*ECF(1,beta)/ECF(2,beta)^2 for ";
   oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_parameters();
   return oss.str();
 }
