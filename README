@@ -2,7 +2,7 @@ The EnergyCorrelator package is based on the physics described in:
 
    Energy Correlation Functions for Jet Substructure.
    Andrew J. Larkoski, Gavin Salam, and Jesse Thaler.
-   arXiv:1305.xxxx.
+   arXiv:1305.0007.
 
 This FastJet-contrib package contains three classes derived from
 FunctionOfPseudoJet<double> :
