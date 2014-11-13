@@ -38,18 +38,23 @@ namespace contrib{
 /// \mainpage EnergyCorrelator contrib
 /// 
 /// The EnergyCorrelator contrib provides an implementation of energy
-/// correlators and their ratios as described in arXiv:1305.XXXX by
-/// Larkoski, Salam and Thaler.
+/// correlators and their ratios as described in arXiv:1305.0007 by
+/// Larkoski, Salam and Thaler.  Additionally, the ratio observable
+/// D2 described in arXiv:1409.6298 by Larkoski, Moult and Neill
+/// is also included in this contrib.
 ///
-/// <p>There are three main classes:
+/// <p>There are four main classes:
 ///
 /// - EnergyCorrelator
 /// - EnergyCorrelatorRatio
 /// - EnergyCorrelatorDoubleRatio
+/// - EnergyCorrelatorD2
 ///
 /// each of which is a FastJet
 /// FunctionOfPseudoJet. EnergyCorrelatorDoubleRatio in particular is
 /// useful for quark/gluon discrimination and boosted object tagging.
+/// EnergyCorrelationD2 has been shown to be the optimal discrimination
+/// observable for boosted 2-prong jets.
 ///
 /// See the file example.cc for an illustration of usage.
 
@@ -77,12 +82,10 @@ class EnergyCorrelator : public FunctionOfPseudoJet<double> {
 public:
 
   enum Measure {
-    pt_R,       ///< use transverse momenta and boost-invariant angles, 
-                ///< eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} p_{ti} p_{tj} \Delta R_{ij}^{\beta} \f$
-    E_theta,    ///  use energies and angles, 
-                ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
-    lorentz_dot ///  use dot product inspired measure
-                ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   (2 \sin (\theta_{ij}/2))^{\beta} \f$
+    pt_R,     ///< use transverse momenta and boost-invariant angles, 
+              ///< eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} p_{ti} p_{tj} \Delta R_{ij}^{\beta} \f$
+    E_theta   ///  use energies and angles, 
+              ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
   };
 
   enum Strategy {
@@ -234,6 +237,56 @@ inline double EnergyCorrelatorDoubleRatio::result(const PseudoJet& jet) const {
    double denominator = pow(EnergyCorrelator(_N, _beta, _measure, _strategy).result(jet), 2.0);
 
    return numerator/denominator;
+
+}
+
+
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorD2
+/// A class to calculate the observable formed from the ratio of the 
+/// 3-point and 2-point energy correlators,
+///     ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3,
+/// called \f$ D_2^{(\beta)} \f$ in the publication.
+class EnergyCorrelatorD2 : public FunctionOfPseudoJet<double> {
+
+public:
+
+  /// constructs an 3-point to 2-point correlator ratio with
+  /// angular exponent beta, using the specified choice of energy and
+  /// angular measure as well one of two possible underlying
+  /// computational strategies
+  EnergyCorrelatorD2(double  beta,
+                        EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                        EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+    : _beta(beta), _measure(measure), _strategy(strategy) {};
+
+  virtual ~EnergyCorrelatorD2() {}
+
+  /// returns the value of the energy correlator ratio for a jet's
+  /// constituents. (Normally accessed by the parent class's
+  /// operator()).
+  double result(const PseudoJet& jet) const;
+
+  std::string description() const;
+
+private:
+
+   double _beta;
+
+   EnergyCorrelator::Measure _measure;
+   EnergyCorrelator::Strategy _strategy;
+
+
+};
+
+
+inline double EnergyCorrelatorD2::result(const PseudoJet& jet) const {
+
+   double numerator3 = EnergyCorrelator(3, _beta, _measure, _strategy).result(jet);
+   double numerator1 = EnergyCorrelator(1, _beta, _measure, _strategy).result(jet);
+   double denominator2 = EnergyCorrelator(2, _beta, _measure, _strategy).result(jet);
+
+   return numerator3*numerator1*numerator1*numerator1/denominator2/denominator2/denominator2;
 
 }
 

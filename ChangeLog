@@ -1,8 +1,20 @@
-2013-12-18  Jesse Thaler
+2014-11-13  Andrew Larkoski  <larkoski@mit.edu>
 
-	* EnergyCorrelator.cc
-	* EnergyCorrelator.hh
-	Added new lorentz_dot Measure in EnergyCorrelator
+	*VERSION:
+	*NEWS:
+        release of version 1.0.2
+
+	*AUTHORS:
+	*COPYING:
+	*README:
+        added reference to arXiv:1409.6298.
+
+	*EnergyCorrelator.cc
+	*EnergyCorrelator.hh
+	added code to calculate D2 observable.
+
+	*example.cc
+	added calculation of D2 to example file.
 
 2013-05-01  Gavin Salam  <gavin.salam@cern.ch>
 

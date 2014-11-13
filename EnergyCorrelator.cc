@@ -244,10 +244,10 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
 double EnergyCorrelator::energy(const PseudoJet& jet) const {
    if (_measure == pt_R) {
       return jet.perp();
-   }  else if (_measure == E_theta || _measure==lorentz_dot) {
+   }  else if (_measure == E_theta) {
       return jet.e();
    } else {
-      assert(_measure==pt_R || _measure==E_theta || _measure==lorentz_dot);
+      assert(_measure==pt_R || _measure==E_theta);
       return std::numeric_limits<double>::quiet_NaN();
    }
 }
@@ -265,9 +265,7 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
       if (costheta > 1.0) costheta = 1.0; // Need to handle case of numerical overflow
       double theta = acos(costheta);
       return theta*theta;    
-   } else if (_measure == lorentz_dot) {
-      double dotproduct = dot_product(jet1,jet2);
-      return 2.0 * dotproduct / (jet1.e() * jet2.e());
+        
    } else {
       assert(_measure==pt_R || _measure==E_theta);
       return std::numeric_limits<double>::quiet_NaN();
@@ -309,6 +307,14 @@ string EnergyCorrelatorDoubleRatio::description() const {
   oss << EnergyCorrelator(_N,_beta,_measure,_strategy).description_parameters();
   return oss.str();
 }
+
+string EnergyCorrelatorD2::description() const {
+  ostringstream oss;
+  oss << "Energy Correlator observable D2 ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^2 for ";
+  oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_parameters();
+  return oss.str();
+}
+
 
 
 

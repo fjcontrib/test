@@ -182,7 +182,21 @@ void analyze(const vector<PseudoJet> & input_particles) {
             }
             cout << "-------------------------------------------------------------------------------------" << endl << endl;
             
-                        
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            cout << "EnergyCorrelatorD2:  D_2^(beta) = ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3 with " << modename[M] << endl;
+            cout << "-------------------------------------------------------------------------------------" << endl;
+            printf("%7s %8s \n","beta","D2 obs");
+
+            for (unsigned int B = 0; B < betalist.size(); B++) {
+               double beta = betalist[B];
+
+               EnergyCorrelatorD2 d2(beta,measurelist[M]);
+
+               printf("%7.3f %8.4f \n",beta,d2(myJet));
+            }
+            cout << "-------------------------------------------------------------------------------------" << endl << endl; 
+
+                       
             // timing tests for the developers
             double do_timing_test = false;
             if (do_timing_test) {
