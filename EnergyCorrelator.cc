@@ -287,6 +287,21 @@ string EnergyCorrelator::description_parameters() const {
   return oss.str();
 }
 
+string EnergyCorrelator::description_no_N() const {
+  ostringstream oss;
+  oss << "beta=" << _beta;
+
+  if      (_measure == pt_R)    oss << ", pt_R measure";
+  else if (_measure == E_theta) oss << ", E_theta measure";
+  else throw Error("unrecognized measure");
+
+  if      (_strategy == slow)   oss << " and 'slow' strategy";
+  else if (_strategy == storage_array)   oss << " and 'storage_array' strategy";
+  else throw Error("unrecognized strategy");
+
+  return oss.str();
+}
+
 string EnergyCorrelator::description() const {
   ostringstream oss;
   oss << "Energy Correlator ECF(N,beta) for ";
@@ -311,21 +326,21 @@ string EnergyCorrelatorDoubleRatio::description() const {
 string EnergyCorrelatorD2::description() const {
   ostringstream oss;
   oss << "Energy Correlator observable D2 ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3 for ";
-  oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_parameters();
+  oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
   return oss.str();
 }
 
 string EnergyCorrelatorC1::description() const {
   ostringstream oss;
   oss << "Energy Correlator observable C1 ECF(2,beta)/ECF(1,beta)^2 for ";
-  oss << EnergyCorrelator(2,_beta,_measure,_strategy).description_parameters();
+  oss << EnergyCorrelator(2,_beta,_measure,_strategy).description_no_N();
   return oss.str();
 }
 
 string EnergyCorrelatorC2::description() const {
   ostringstream oss;
   oss << "Energy Correlator observable C2 ECF(3,beta)*ECF(1,beta)/ECF(2,beta)^2 for ";
-  oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_parameters();
+  oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
   return oss.str();
 }
 

@@ -120,6 +120,7 @@ public:
 
   /// returns the the part of the description related to the parameters
   std::string description_parameters() const;
+  std::string description_no_N() const;
 
 private:
 
