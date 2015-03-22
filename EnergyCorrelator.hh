@@ -84,8 +84,10 @@ public:
   enum Measure {
     pt_R,     ///< use transverse momenta and boost-invariant angles, 
               ///< eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} p_{ti} p_{tj} \Delta R_{ij}^{\beta} \f$
-    E_theta   ///  use energies and angles, 
+    E_theta,   ///  use energies and angles, 
               ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   \theta_{ij}^{\beta} \f$
+    E_inv     ///  use energies and invariant mass, 
+              ///  eg \f$\mathrm{ECF}(2,\beta) = \sum_{i<j} E_{i} E_{j}   (\frac{2 p_{i} \cdot p_{j}}{E_{i} E_{j}})^{\beta/2} \f$
   };
 
   enum Strategy {

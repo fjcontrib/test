@@ -121,10 +121,12 @@ void analyze(const vector<PseudoJet> & input_particles) {
          vector<EnergyCorrelator::Measure> measurelist;
          measurelist.push_back(EnergyCorrelator::pt_R);
          measurelist.push_back(EnergyCorrelator::E_theta); 
+         measurelist.push_back(EnergyCorrelator::E_inv); 
 
          vector<string> modename;
          modename.push_back("pt_R");
          modename.push_back("E_theta");
+         modename.push_back("E_inv");
 
          for (unsigned int M = 0; M < measurelist.size(); M++) {
             

@@ -244,10 +244,10 @@ double EnergyCorrelator::result(const PseudoJet& jet) const {
 double EnergyCorrelator::energy(const PseudoJet& jet) const {
    if (_measure == pt_R) {
       return jet.perp();
-   }  else if (_measure == E_theta) {
+   }  else if (_measure == E_theta || _measure == E_inv) {
       return jet.e();
    } else {
-      assert(_measure==pt_R || _measure==E_theta);
+      assert(_measure==pt_R || _measure==E_theta || _measure==E_inv);
       return std::numeric_limits<double>::quiet_NaN();
    }
 }
@@ -266,8 +266,11 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
       double theta = acos(costheta);
       return theta*theta;    
         
+   } else if (_measure == E_inv) {
+      double dot4 = jet1.E()*jet2.E() - jet1.px()*jet2.px() - jet1.py()*jet2.py() - jet1.pz()*jet2.pz();
+      return 2.0 * dot4 / jet1.E() / jet2.E();
    } else {
-      assert(_measure==pt_R || _measure==E_theta);
+      assert(_measure==pt_R || _measure==E_theta || _measure==E_inv);
       return std::numeric_limits<double>::quiet_NaN();
    }
 }
@@ -278,6 +281,7 @@ string EnergyCorrelator::description_parameters() const {
 
   if      (_measure == pt_R)    oss << ", pt_R measure";
   else if (_measure == E_theta) oss << ", E_theta measure";
+  else if (_measure == E_inv) oss << ", E_inv measure";
   else throw Error("unrecognized measure");
 
   if      (_strategy == slow)   oss << " and 'slow' strategy";
@@ -293,6 +297,7 @@ string EnergyCorrelator::description_no_N() const {
 
   if      (_measure == pt_R)    oss << ", pt_R measure";
   else if (_measure == E_theta) oss << ", E_theta measure";
+  else if (_measure == E_inv) oss << ", E_inv measure";
   else throw Error("unrecognized measure");
 
   if      (_strategy == slow)   oss << " and 'slow' strategy";

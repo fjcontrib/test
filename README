@@ -61,6 +61,11 @@ angles).  The measure
   E_theta
 
 uses particle energies and angles and is appropriate for e+e-
-collider applications.
+collider applications.  The measure
+
+  E_inv
+
+defines angles through Lorentz-invariant dot products and is
+appropriate for e+e- collider applications.
 
 Usage is shown in the example.cc program.
