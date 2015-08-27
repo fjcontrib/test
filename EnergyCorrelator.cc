@@ -267,8 +267,11 @@ double EnergyCorrelator::angleSquared(const PseudoJet& jet1, const PseudoJet& je
       return theta*theta;    
         
    } else if (_measure == E_inv) {
-      double dot4 = max(jet1.E()*jet2.E() - jet1.px()*jet2.px() - jet1.py()*jet2.py() - jet1.pz()*jet2.pz(),0.0);
-      return 2.0 * dot4 / jet1.E() / jet2.E();
+      if (jet1.E() < 0.0000001 || jet2.E() < 0.0000001) return 0.0;
+      else {
+        double dot4 = max(jet1.E()*jet2.E() - jet1.px()*jet2.px() - jet1.py()*jet2.py() - jet1.pz()*jet2.pz(),0.0);
+        return 2.0 * dot4 / jet1.E() / jet2.E();
+      }
    } else {
       assert(_measure==pt_R || _measure==E_theta || _measure==E_inv);
       return std::numeric_limits<double>::quiet_NaN();
