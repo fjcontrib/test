@@ -1,3 +1,23 @@
+2016-06-23 Lina Necib  <lnecib@mit.edu>
+
+	*VERSION:
+	1.2.0-alpha0
+	*NEWS:
+	*AUTHORS:
+	Lina Necib
+	*COPYING:
+	*README:
+        added descriptions of functions that will appear shortly arXiv:160X.XXXXX
+
+	*EnergyCorrelator.cc
+	added code to calculate normalized ECFS.
+	*EnergyCorrelator.hh
+	added code to calculate normalized ECFS, Nseries, generalized D2, N2, N3, and M2.
+
+	*example.cc
+	added calculation of normalized ECFS, Nseries, generalized D2, N2, N3, and M2 to example file.
+
+
 2014-11-20  Jesse Thaler  <jthaler@mit.edu>
 
 	* README:
