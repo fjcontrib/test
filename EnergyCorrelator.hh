@@ -395,9 +395,10 @@ namespace contrib{
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorNormalized
 /// ECF(N,beta)/ECF(1,beta) is the normalized N-point energy correlation function, with an angular exponent beta.
-/// We then generalize to i number of angles where the definition is ECFN(N, angles, beta). When angles = N choose 2,
-/// this reproduces the earlier normalized energy correlation functions.
-/// It is defined as follows
+/// We then generalize to i number of angles where the definition is ECFN(N, beta, angles). When angles = N choose 2,
+/// this reproduces the earlier normalized energy correlation functions. By default, when angles = -1, angles is set to
+/// equal N choose 2 and this reproduces the normalized version of the earlier energy correlation functions
+/// When angles are not given, or given -1, the energy correlation functions are defined as follows
 ///
 ///  - ECFN(1,\f$ \beta)  = 1\f$
 ///  - ECFN(2,\f$ \beta)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
@@ -406,12 +407,23 @@ namespace contrib{
 ///  - ...
 ///  where the z_i's are the energy fractions.
 ///
+
+/// When a new value of angles "a" is given, the ECFN are defined as
+///  - ECFN(1,\f$ \beta, a)  = 1\f$
+///  - ECFN(2,\f$ \beta, a)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
+///  - ECFN(3,\f$ \beta, a)  = \sum_{i<j<k} z_i z_j z_k min_a( ( \theta_{ij} \theta_{ik}), (\theta_{ik}, \theta_{jk} ),
+///  (\theta_{ij}, \theta_{jk}) )^\beta \f$
+///  where min_a means the product of a elements of the following list.
+///  - ...
+
 /// The correlation can be determined with energies and angles (as
 /// given above) or with transverse momenta and boost invariant angles
 /// (the code's default). The choice is controlled by
 /// EnergyCorrelatorNormalized::Measure provided in the constructor.
 ///
 /// The current implementation handles values of N up to and including 5.
+///
+
 
     class EnergyCorrelatorNormalized : public FunctionOfPseudoJet<double> {
     public:
@@ -455,7 +467,7 @@ namespace contrib{
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
 ///     ECFN(3,alpha)/ECFN(2,beta)^3 alpha/beta,
-/// called \f$ D_2^{(\beta)} \f$ in the publication.
+/// called \f$ D_2^{(\alpha, \beta)} \f$ in the publication.
     class EnergyCorrelatorGeneralizedD2 : public FunctionOfPseudoJet<double> {
 
     public:
@@ -494,8 +506,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorGeneralizedD2::result(const PseudoJet& jet) const {
 
-        double numerator = EnergyCorrelatorNormalized(3, _alpha, 3, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
+        double numerator = EnergyCorrelatorNormalized(3, _alpha, -1, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorNormalized(2, _beta, -1, _measure, _strategy).result(jet);
 
         return numerator/pow(denominator, 3.0*_alpha/_beta);
 
@@ -508,6 +520,7 @@ namespace contrib{
 /// 3-point and 2-point energy correlators,
 ///     N_n = ECFN(n+1,beta,2)/ECFN(n,beta,1)^2,
 /// called \f$ N_i^{(\alpha, \beta)} \f$ in the publication.
+/// By definition, N_1^\beta = ECFN(2, 2*beta, 1)
     class EnergyCorrelatorNseries : public FunctionOfPseudoJet<double> {
 
     public:
@@ -520,7 +533,7 @@ namespace contrib{
                 int n,
                 double  beta,
                 EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
-                EnergyCorrelator::Strategy strategy = EnergyCorrelator::slow)
+                EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
                 : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {};
 
         virtual ~EnergyCorrelatorNseries() {}
@@ -571,7 +584,7 @@ namespace contrib{
         /// computational strategies
         EnergyCorrelatorN2(double  beta,
                            EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
-                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::slow)
+                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
                 : _beta(beta), _measure(measure), _strategy(strategy) {};
 
         virtual ~EnergyCorrelatorN2() {}
@@ -609,7 +622,7 @@ namespace contrib{
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
 ///     ECFN(4,beta,2)/ECFN(3,beta,1)^2,
-/// called \f$ N_2^{(\beta)} \f$ in the publication.
+/// called \f$ N_3^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorN3 : public FunctionOfPseudoJet<double> {
 
     public:
@@ -620,7 +633,7 @@ namespace contrib{
         /// computational strategies
         EnergyCorrelatorN3(double  beta,
                            EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
-                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::slow)
+                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
                 : _beta(beta), _measure(measure), _strategy(strategy) {};
 
         virtual ~EnergyCorrelatorN3() {}
@@ -658,7 +671,7 @@ namespace contrib{
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
 ///     ECFN(3,beta,1)/ECFN(2,beta,1),
-/// called \f$ N_2^{(\beta)} \f$ in the publication.
+/// called \f$ M_2^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorM2 : public FunctionOfPseudoJet<double> {
 
     public:
@@ -669,7 +682,7 @@ namespace contrib{
         /// computational strategies
         EnergyCorrelatorM2(double  beta,
                            EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
-                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::slow)
+                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
                 : _beta(beta), _measure(measure), _strategy(strategy) {};
 
         virtual ~EnergyCorrelatorM2() {}
