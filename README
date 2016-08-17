@@ -50,25 +50,28 @@ EnergyCorrelatorD2(double beta, Measure measure)
   This is the recommended function for boosted 2-prong object
   discrimination (boosted W/Z/H).
 
-EnergyCorrelatorNormlalized(int N, double beta, int angles, Measure measure)
+----------------------------------------------------------------------------
+
+EnergyCorrelatorNormalized(int N, double beta, int angles, Measure measure)
 
   Called ECFN(N,beta).  Corresponds to the N-point normalized (dimensionless)
   correlation function, with beta the angular exponent, while measure
   = pt_R (default) or E_theta sets how energies and angles are
   determined.
   ECFN(N, beta) = ECF(N, beta)/ECF(1,beta)^N
+  
+
+  First defined in EnergyCorrelator 1.2.0-alpha0
+----------------------------------------------------------------------------
 
 EnergyCorrelatorGeneralizedD2(double alpha, double beta, Measure measure)
 
   Called D_2^(alpha, beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,alpha)/ECFN(2,beta)^(3 alpha/beta).  
+  
 
-EnergyCorrelatorD2(double beta, Measure measure)
-
-  Called D_2^(beta) in arXiv:1409.6298.  
-  Equals ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3.  
-  This is the recommended function for boosted 2-prong object
-  discrimination (boosted W/Z/H).
+  First defined in EnergyCorrelator 1.2.0-alpha0
+----------------------------------------------------------------------------
 
 EnergyCorrelatorNseries(int i, double beta, Measure measure)
 
@@ -85,6 +88,9 @@ EnergyCorrelatorN3(double beta, Measure measure)
   Called N_3^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(4,beta,2)/ECFN(3,beta,1)^2.  
 
+  First defined in EnergyCorrelator 1.2.0-alpha0
+----------------------------------------------------------------------------
+
 EnergyCorrelatorMseries(int i, double beta, Measure measure)
 
   Called M_i^(beta) in arXiv:160X.XXXXX  
@@ -95,7 +101,8 @@ EnergyCorrelatorM2(double beta, Measure measure)
   Called M_2^(alpha, beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,beta,1)/ECFN(2,beta,1).
 
-
+  First defined in EnergyCorrelator 1.2.0-alpha0
+----------------------------------------------------------------------------
 
 The argument Measure in each of these functions sets how energies
 and angles are defined in the observable.  The measure 
@@ -108,6 +115,11 @@ angles).  The measure
   E_theta
 
 uses particle energies and angles and is appropriate for e+e-
+collider applications. The measure
+
+  E_inv
+
+uses particle energies and angles and is appropriate for ??????? e+e-
 collider applications.
 
-Usage is shown in the example.cc program.
+Usage is shown in the example.cc program, and recommended usage is shown in example_basic_usage.cc .

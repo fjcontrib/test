@@ -41,14 +41,25 @@ namespace contrib{
 /// correlators and their ratios as described in arXiv:1305.0007 by
 /// Larkoski, Salam and Thaler.  Additionally, the ratio observable
 /// D2 described in arXiv:1409.6298 by Larkoski, Moult and Neill
-/// is also included in this contrib.
+/// is also included in this contrib. Finally, a normalized version of
+/// the energy correlation functions is added, as well as new observables
+/// N2, M2, a generalized version of D2, the MSeries and the NSeries, all
+/// defined in arXiv:16xx.yyyyy by Moult, Necib and Thaler.
 ///
-/// <p>There are four main classes:
+///
+/// <p>There are 11 main classes:
 ///
 /// - EnergyCorrelator
 /// - EnergyCorrelatorRatio
 /// - EnergyCorrelatorDoubleRatio
 /// - EnergyCorrelatorD2
+/// - EnergyCorrelatorNormalized
+/// - EnergyCorrelatorGeneralizedD2
+/// - EnergyCorrelatorNseries
+/// - EnergyCorrelatorN2
+/// - EnergyCorrelatorN3
+/// - EnergyCorrelatorMseries
+/// - EnergyCorrelatorM2
 ///
 /// each of which is a FastJet
 /// FunctionOfPseudoJet. EnergyCorrelatorDoubleRatio in particular is
@@ -454,6 +465,7 @@ namespace contrib{
         int _angles;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
+        //EnergyCorrelator _helper_correlator =  EnergyCorrelator(1,1.0, _measure, _strategy);
 
         double energy(const PseudoJet& jet) const;
         double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const;
@@ -557,8 +569,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorNseries::result(const PseudoJet& jet) const {
 
-        if (_n == 1) return EnergyCorrelatorNormalized(_n + 1, 2*_beta, 1, _measure, _strategy).result(jet);
-
+        if (_n == 1) return EnergyCorrelatorNormalized(2, 2*_beta, 1, _measure, _strategy).result(jet);
+        // By definition, N1 = ECFN(2)^(2 beta)
         double numerator = EnergyCorrelatorNormalized(_n + 1, _beta, 2, _measure, _strategy).result(jet);
         double denominator = EnergyCorrelatorNormalized(_n, _beta, 1, _measure, _strategy).result(jet);
 
@@ -709,7 +721,7 @@ namespace contrib{
 
     inline double EnergyCorrelatorMseries::result(const PseudoJet& jet) const {
 
-        if (_n == 1) return EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
+        if (_n == 1) return EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
 
         double numerator = EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
         double denominator = EnergyCorrelatorNormalized(_n, _beta, 1, _measure, _strategy).result(jet);

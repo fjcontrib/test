@@ -1,7 +1,7 @@
 //  EnergyCorrelator Package
 //  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net lnecib@mit.edu
 //
-//  Copyright (c) 2013
+//  Copyright (c) 2013-2016
 //  Andrew Larkoski, Gavin Salam, and Jesse Thaler
 //
 //  $Id$
@@ -66,7 +66,7 @@ namespace contrib{
         }
 
 
-        // if N > 4, then throw error
+        // if N > 5, then throw error
         if (_N > 5) {
             throw Error("EnergyCorrelator is only hard coded for N = 0,1,2,3,4,5");
         }
@@ -258,10 +258,10 @@ namespace contrib{
         } else if (_measure == E_theta) {
             // doesn't seem to be a fastjet built in for this
             double dot = jet1.px()*jet2.px() + jet1.py()*jet2.py() + jet1.pz()*jet2.pz();
-            double norm1 = sqrt(jet1.px()*jet1.px() + jet1.py()*jet1.py() + jet1.pz()*jet1.pz());
-            double norm2 = sqrt(jet2.px()*jet2.px() + jet2.py()*jet2.py() + jet2.pz()*jet2.pz());
+            double norm1 = jet1.px()*jet1.px() + jet1.py()*jet1.py() + jet1.pz()*jet1.pz();
+            double norm2 = jet2.px()*jet2.px() + jet2.py()*jet2.py() + jet2.pz()*jet2.pz();
 
-            double costheta = dot/(norm1 * norm2);
+            double costheta = dot/(sqrt(norm1 * norm2));
             if (costheta > 1.0) costheta = 1.0; // Need to handle case of numerical overflow
             double theta = acos(costheta);
             return theta*theta;
@@ -303,8 +303,8 @@ namespace contrib{
 
         // Find the max number of angles and throw an error if unsuitable
         int N_total = int(_N*(_N-1)/2);
-        if(_angles > N_total) throw Error("Requested number of angles larger than number of angles available");
-        if (_angles < -1) throw Error("Negative number of angles");
+        if(_angles > N_total) throw Error("Requested number of angles for EnergyCorrelatorNormalized is larger than number of angles available");
+        if (_angles < -1) throw Error("Negative number of angles called for EnergyCorrelatorNormalized");
 
         double half_beta = _beta/2.0;
 
@@ -369,6 +369,7 @@ namespace contrib{
                             angle3 = angleStore[j][k];
 
                             if (_angles == -1){
+                                // When _angles = -1, it defaults to considering all angles.
                                 angle = angle1*angle2*angle3;
                             } else {
                                 double angle_list[] = {angle1, angle2, angle3};
@@ -603,11 +604,11 @@ namespace contrib{
         // if jet does not have constituents, throw error
         if (!jet.has_constituents()) throw Error("EnergyCorrelator called on jet with no constituents.");
 
-        // Throw an error if N < 0
-        if (_N < 0 ) throw Error("N cannot be negative");
+        // Throw an error if N < 1
+        if (_N < 1 ) throw Error("N cannot be negative or zero");
 
-        // get N = 0 and N = 1 cases out of the way
-        if (_N == 0 || _N == 1) {
+        // get the N = 1 case out of the way
+        if (_N == 1) {
             std::vector<double> ans (1, 1.0);
             return ans;
         }

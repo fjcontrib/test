@@ -1,3 +1,19 @@
+2016-08-17 Lina Necib  <lnecib@mit.edu>
+
+	*VERSION:
+	*NEWS:
+	*AUTHORS:
+	*COPYING:
+	*README:
+	*EnergyCorrelator.cc
+	added code to calculate normalized ECFS.
+	*EnergyCorrelator.hh
+	added code to calculate normalized ECFS, Nseries, generalized D2, N2, N3, and M2.
+
+	*example.cc
+	added calculation of normalized ECFS, Nseries, generalized D2, N2, N3, and M2 to example file.
+
+
 2016-06-23 Lina Necib  <lnecib@mit.edu>
 
 	*VERSION:
