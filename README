@@ -85,6 +85,11 @@ EnergyCorrelatorN3(double beta, Measure measure)
   Called N_3^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(4,beta,2)/ECFN(3,beta,1)^2.  
 
+EnergyCorrelatorMseries(int i, double beta, Measure measure)
+
+  Called M_i^(beta) in arXiv:160X.XXXXX  
+  Equals ECFN(n+1,beta,1)/ECFN(n,beta,1).  
+
 EnergyCorrelatorM2(double beta, Measure measure)
 
   Called M_2^(alpha, beta) in arXiv:160X.XXXXX  

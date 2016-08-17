@@ -2,7 +2,7 @@
 #define __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
 
 //  EnergyCorrelator Package
-//  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
+//  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net lnecib@mit.edu
 //
 //  Copyright (c) 2013
 //  Andrew Larkoski, Gavin Salam, and Jesse Thaler
@@ -665,6 +665,58 @@ namespace contrib{
 
     }
 
+
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorMseries
+/// A class to calculate the observable formed from the ratio of the
+/// 3-point and 2-point energy correlators,
+///     M_n = ECFN(n+1,beta,1)/ECFN(n,beta,1),
+/// called \f$ M_i^{(\alpha, \beta)} \f$ in the publication.
+/// By definition, M_1^\beta = ECFN(2, beta, 1)
+    class EnergyCorrelatorMseries : public FunctionOfPseudoJet<double> {
+
+    public:
+
+        /// constructs a n 3-point to 2-point correlator ratio with
+        /// angular exponent beta, using the specified choice of energy and
+        /// angular measure as well one of two possible underlying
+        /// computational strategies
+        EnergyCorrelatorMseries(
+                int n,
+                double  beta,
+                EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {};
+
+        virtual ~EnergyCorrelatorMseries() {}
+
+        /// returns the value of the energy correlator ratio for a jet's
+        /// constituents. (Normally accessed by the parent class's
+        /// operator()).
+        double result(const PseudoJet& jet) const;
+
+        std::string description() const;
+
+    private:
+
+        int _n;
+        double _beta;
+        EnergyCorrelator::Measure _measure;
+        EnergyCorrelator::Strategy _strategy;
+
+    };
+
+
+    inline double EnergyCorrelatorMseries::result(const PseudoJet& jet) const {
+
+        if (_n == 1) return EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
+
+        double numerator = EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorNormalized(_n, _beta, 1, _measure, _strategy).result(jet);
+
+        return numerator/denominator;
+
+    }
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorM2

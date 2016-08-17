@@ -1,5 +1,5 @@
 //  EnergyCorrelator Package
-//  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
+//  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net lnecib@mit.edu
 //
 //  Copyright (c) 2013
 //  Andrew Larkoski, Gavin Salam, and Jesse Thaler
@@ -301,7 +301,7 @@ namespace contrib{
         // The overall normalization
         double norm = pow(EJ, _N);
 
-        // Find the max number of angles and throw an error if it unsuitable
+        // Find the max number of angles and throw an error if unsuitable
         int N_total = int(_N*(_N-1)/2);
         if(_angles > N_total) throw Error("Requested number of angles larger than number of angles available");
         if (_angles < -1) throw Error("Negative number of angles");
@@ -995,6 +995,13 @@ namespace contrib{
     string EnergyCorrelatorNseries::description() const {
         ostringstream oss;
         oss << "Energy Correlator observable N_n ECFN(n+1,beta,2)/ECFN(n,beta,1)^2 for ";
+        oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
+        return oss.str();
+    }
+
+    string EnergyCorrelatorMseries::description() const {
+        ostringstream oss;
+        oss << "Energy Correlator observable M_n ECFN(n+1,beta,1)/ECFN(n,beta,1) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
