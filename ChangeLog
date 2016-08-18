@@ -3,15 +3,18 @@
 	*VERSION:
 	*NEWS:
 	*AUTHORS:
+	Added placeholder for new reference
 	*COPYING:
+	Added placeholder for new reference
 	*README:
+	added information on different measures E_inv
 	*EnergyCorrelator.cc
-	added code to calculate normalized ECFS.
+	Minor text edits + added comments
 	*EnergyCorrelator.hh
-	added code to calculate normalized ECFS, Nseries, generalized D2, N2, N3, and M2.
-
-	*example.cc
-	added calculation of normalized ECFS, Nseries, generalized D2, N2, N3, and M2 to example file.
+	Minor text edits + added comments
+	*example_basic_usage.cc
+	added a simplified example file that shows the use of the
+	different observables.
 
 
 2016-06-23 Lina Necib  <lnecib@mit.edu>
@@ -23,15 +26,18 @@
 	Lina Necib
 	*COPYING:
 	*README:
-        added descriptions of functions that will appear shortly arXiv:160X.XXXXX
+        added descriptions of functions that will appear shortly 
+	arXiv:160X.XXXXX
 
 	*EnergyCorrelator.cc
 	added code to calculate normalized ECFS.
 	*EnergyCorrelator.hh
-	added code to calculate normalized ECFS, Nseries, generalized D2, N2, N3, and M2.
+	added code to calculate normalized ECFS, Nseries, generalized
+	D2, N2, N3, and M2.
 
 	*example.cc
-	added calculation of normalized ECFS, Nseries, generalized D2, N2, N3, and M2 to example file.
+	added calculation of normalized ECFS, Nseries, generalized 
+	D2, N2, N3, and M2 to example file.
 
 
 2014-11-20  Jesse Thaler  <jthaler@mit.edu>

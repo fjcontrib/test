@@ -110,16 +110,27 @@ and angles are defined in the observable.  The measure
   pt_R
 
 uses hadron collider coordinates (transverse momenta and boost-invariant 
-angles).  The measure
+angles). The "energy" in this case is defined as the pT of the jet, 
+and the "angle" is the distance between the jets in phi, eta space.
+
+The measure
 
   E_theta
 
 uses particle energies and angles and is appropriate for e+e-
-collider applications. The measure
+collider applications. The "energy" is the jet energy and the angle
+between 2 jets is computed from the dot product of the 3 vectors p1 and p2.
+
+The measure
 
   E_inv
 
-uses particle energies and angles and is appropriate for ??????? e+e-
-collider applications.
+uses particle energies and angles and is also appropriate for e+e-
+collider applications. In this case “theta” is replaced by Mandelstam 
+invariants with the same behavior in the collinear limits, leading to a more 
+calculation friendly observables. The "energy" is defined as the jet energy
+and the angle between 2 jets is computed from the dot product of the 4 vectors
+p1 and p2. 
 
-Usage is shown in the example.cc program, and recommended usage is shown in example_basic_usage.cc .
+Usage is shown in the example.cc program, and recommended usage 
+is shown in example_basic_usage.cc .

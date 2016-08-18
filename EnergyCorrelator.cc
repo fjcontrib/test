@@ -902,12 +902,12 @@ namespace contrib{
 
 
     double EnergyCorrelatorNormalized::energy(const PseudoJet& jet) const {
-        return  EnergyCorrelator(1,1.0, _measure, _strategy).energy(jet);
+        return _helper_correlator.energy(jet);
     }
 
 
     double EnergyCorrelatorNormalized::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
-        return  EnergyCorrelator(1,1.0, _measure, _strategy).angleSquared(jet1, jet2);
+        return _helper_correlator.angleSquared(jet1, jet2);
     }
 
 

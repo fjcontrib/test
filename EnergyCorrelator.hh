@@ -465,7 +465,7 @@ namespace contrib{
         int _angles;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
-        //EnergyCorrelator _helper_correlator =  EnergyCorrelator(1,1.0, _measure, _strategy);
+        EnergyCorrelator _helper_correlator =  EnergyCorrelator(1,1.0, _measure, _strategy);
 
         double energy(const PseudoJet& jet) const;
         double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const;
