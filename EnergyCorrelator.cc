@@ -902,14 +902,12 @@ namespace contrib{
 
 
     double EnergyCorrelatorNormalized::energy(const PseudoJet& jet) const {
-        return EnergyCorrelator(1,1.0, _measure, _strategy).energy(jet);
-        //return _helper_correlator.energy(jet);
+        return _helper_correlator.energy(jet);
     }
 
 
     double EnergyCorrelatorNormalized::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
-        return EnergyCorrelator(1,1.0, _measure, _strategy).angleSquared(jet1,jet2);
-        //return _helper_correlator.angleSquared(jet1, jet2);
+        return _helper_correlator.angleSquared(jet1, jet2);
     }
 
 
@@ -1030,6 +1028,7 @@ namespace contrib{
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
+
     string EnergyCorrelatorUseries::description() const {
         ostringstream oss;
         oss << "Energy Correlator observable U_n ECFN(n+1,beta,1) for ";
@@ -1037,6 +1036,26 @@ namespace contrib{
         return oss.str();
     }
 
+    string EnergyCorrelatorU1::description() const {
+        ostringstream oss;
+        oss << "Energy Correlator observable U_1 ECFN(2,beta,1) for ";
+        oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
+        return oss.str();
+    }
+
+    string EnergyCorrelatorU2::description() const {
+        ostringstream oss;
+        oss << "Energy Correlator observable U_2 ECFN(3,beta,1) for ";
+        oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
+        return oss.str();
+    }
+
+    string EnergyCorrelatorU3::description() const {
+        ostringstream oss;
+        oss << "Energy Correlator observable U_3 ECFN(4,beta,1) for ";
+        oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
+        return oss.str();
+    }
 
 
 } // namespace contrib

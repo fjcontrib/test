@@ -47,19 +47,27 @@ namespace contrib{
 /// defined in arXiv:16xx.yyyyy by Moult, Necib and Thaler.
 ///
 ///
-/// <p>There are 11 main classes:
+/// <p>There are 7 main classes:
 ///
 /// - EnergyCorrelator
 /// - EnergyCorrelatorRatio
 /// - EnergyCorrelatorDoubleRatio
-/// - EnergyCorrelatorD2
 /// - EnergyCorrelatorNormalized
-/// - EnergyCorrelatorGeneralizedD2
 /// - EnergyCorrelatorNseries
+/// - EnergyCorrelatorMseries
+/// - EnergyCorrelatorUseries
+///
+/// And Aliases:
+/// - EnergyCorrelatorC1
+/// - EnergyCorrelatorC2
+/// - EnergyCorrelatorD2
+/// - EnergyCorrelatorGeneralizedD2
 /// - EnergyCorrelatorN2
 /// - EnergyCorrelatorN3
-/// - EnergyCorrelatorMseries
 /// - EnergyCorrelatorM2
+/// - EnergyCorrelatorU1
+/// - EnergyCorrelatorU2
+/// - EnergyCorrelatorU3
 ///
 /// each of which is a FastJet
 /// FunctionOfPseudoJet. EnergyCorrelatorDoubleRatio in particular is
@@ -447,7 +455,7 @@ namespace contrib{
                                    int angles = -1,
                                    EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                                    EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _N(N), _beta(beta), _angles(angles), _measure(measure), _strategy(strategy) {};
+                : _N(N), _beta(beta), _angles(angles), _measure(measure), _strategy(strategy),  _helper_correlator(1,1.0, _measure, _strategy) {};
 
         /// destructor
         virtual ~EnergyCorrelatorNormalized(){}
@@ -466,7 +474,7 @@ namespace contrib{
         int _angles;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
-        //static EnergyCorrelator _helper_correlator = EnergyCorrelator(1,1.0, _measure, _strategy);
+        EnergyCorrelator _helper_correlator;
 
         double energy(const PseudoJet& jet) const;
         double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const;
@@ -829,6 +837,145 @@ namespace contrib{
     }
 
 
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorU1
+/// A class to calculate the observable formed from
+///     ECFN(2,beta,1),
+/// called \f$ U_1^{(\beta)} \f$ in the publication.
+    class EnergyCorrelatorU1 : public FunctionOfPseudoJet<double> {
+
+    public:
+
+        /// constructs a 2-point correlator with
+        /// angular exponent beta, using the specified choice of energy and
+        /// angular measure as well one of two possible underlying
+        /// computational strategies
+        EnergyCorrelatorU1(double  beta,
+                           EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                : _beta(beta), _measure(measure), _strategy(strategy) {};
+
+        virtual ~EnergyCorrelatorU1() {}
+
+        /// returns the value of the energy correlator ratio for a jet's
+        /// constituents. (Normally accessed by the parent class's
+        /// operator()).
+        double result(const PseudoJet& jet) const;
+
+        std::string description() const;
+
+    private:
+
+        double _beta;
+
+        EnergyCorrelator::Measure _measure;
+        EnergyCorrelator::Strategy _strategy;
+
+
+    };
+
+
+    inline double EnergyCorrelatorU1::result(const PseudoJet& jet) const {
+
+        double answer = EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
+
+        return answer;
+
+    }
+
+
+    //------------------------------------------------------------------------
+    /// \class EnergyCorrelatorU2
+    /// A class to calculate the observable formed from
+    ///     ECFN(3,beta,1),
+    /// called \f$ U_2^{(\beta)} \f$ in the publication.
+    class EnergyCorrelatorU2 : public FunctionOfPseudoJet<double> {
+
+    public:
+
+        /// constructs a 3-point correlator with
+        /// angular exponent beta, using the specified choice of energy and
+        /// angular measure as well one of two possible underlying
+        /// computational strategies
+        EnergyCorrelatorU2(double  beta,
+                           EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                : _beta(beta), _measure(measure), _strategy(strategy) {};
+
+        virtual ~EnergyCorrelatorU2() {}
+
+        /// returns the value of the energy correlator ratio for a jet's
+        /// constituents. (Normally accessed by the parent class's
+        /// operator()).
+        double result(const PseudoJet& jet) const;
+
+        std::string description() const;
+
+    private:
+
+        double _beta;
+
+        EnergyCorrelator::Measure _measure;
+        EnergyCorrelator::Strategy _strategy;
+
+
+    };
+
+
+    inline double EnergyCorrelatorU2::result(const PseudoJet& jet) const {
+
+        double answer = EnergyCorrelatorNormalized(3, _beta, 1, _measure, _strategy).result(jet);
+
+        return answer;
+
+    }
+
+
+    //------------------------------------------------------------------------
+    /// \class EnergyCorrelatorU3
+    /// A class to calculate the observable formed from
+    ///     ECFN(4,beta,1),
+    /// called \f$ U_3^{(\beta)} \f$ in the publication.
+    class EnergyCorrelatorU3 : public FunctionOfPseudoJet<double> {
+
+    public:
+
+        /// constructs a 4-point correlator with
+        /// angular exponent beta, using the specified choice of energy and
+        /// angular measure as well one of two possible underlying
+        /// computational strategies
+        EnergyCorrelatorU3(double  beta,
+                           EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                           EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                : _beta(beta), _measure(measure), _strategy(strategy) {};
+
+        virtual ~EnergyCorrelatorU3() {}
+
+        /// returns the value of the energy correlator ratio for a jet's
+        /// constituents. (Normally accessed by the parent class's
+        /// operator()).
+        double result(const PseudoJet& jet) const;
+
+        std::string description() const;
+
+    private:
+
+        double _beta;
+
+        EnergyCorrelator::Measure _measure;
+        EnergyCorrelator::Strategy _strategy;
+
+
+    };
+
+
+    inline double EnergyCorrelatorU3::result(const PseudoJet& jet) const {
+
+        double answer = EnergyCorrelatorNormalized(4, _beta, 1, _measure, _strategy).result(jet);
+
+        return answer;
+
+    }
 
 
 
