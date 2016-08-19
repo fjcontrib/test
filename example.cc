@@ -4,8 +4,8 @@
 //
 //   ./example < ../data/single-event.dat
 //
-// Copyright (c) 2013
-// Andrew Larkoski, Gavin Salam, and Jesse Thaler
+// Copyright (c) 2013-2016
+// Andrew Larkoski, Lina Necib, Gavin Salam, and Jesse Thaler
 //
 // $Id$
 //----------------------------------------------------------------------
@@ -394,6 +394,23 @@ void analyze(const vector<PseudoJet> & input_particles) {
                     EnergyCorrelatorM2 M2(beta,measurelist[M]);
 
                     printf("%7.3f %14.6f \n",beta,M2(myJet));
+                }
+                cout << "-------------------------------------------------------------------------------------" << endl << endl;
+
+                cout << "-------------------------------------------------------------------------------------" << endl;
+                cout << "EnergyCorrelatorUseries:  U_i(beta) = ECFN(i+1, beta, 1) with " << modename[M] << endl;
+                cout << "-------------------------------------------------------------------------------------" << endl;
+                printf("%7s %20svn s %20s %20s \n","beta", "N=1", "N=2", "N=3");
+
+                for (unsigned int B = 0; B < betalist.size(); B++) {
+                    double beta = betalist[B];
+
+                    EnergyCorrelatorUseries U1(1,beta,measurelist[M]);
+                    EnergyCorrelatorUseries U2(2,beta,measurelist[M]);
+                    EnergyCorrelatorUseries U3(3,beta,measurelist[M]);
+
+
+                    printf("%7.3f %20.10f %20.10f %20.10f \n",beta,U1(myJet),U2(myJet),U3(myJet));
                 }
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 

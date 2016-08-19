@@ -2,10 +2,10 @@
 #define __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
 
 //  EnergyCorrelator Package
-//  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net lnecib@mit.edu
+//  Questions/Comments?  larkoski@mit.edu lnecib@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
 //
-//  Copyright (c) 2013
-//  Andrew Larkoski, Gavin Salam, and Jesse Thaler
+//  Copyright (c) 2013-2016
+//  Andrew Larkoski, Lina Necib Gavin Salam, and Jesse Thaler
 //
 //  $Id$
 //----------------------------------------------------------------------
@@ -455,6 +455,7 @@ namespace contrib{
         /// returns the value of the normalized energy correlator for a jet's
         /// constituents. (Normally accessed by the parent class's
         /// operator()).
+
         double result(const PseudoJet& jet) const;
         std::vector<double> result_all_angles(const PseudoJet& jet) const;
 
@@ -465,7 +466,7 @@ namespace contrib{
         int _angles;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
-        EnergyCorrelator _helper_correlator =  EnergyCorrelator(1,1.0, _measure, _strategy);
+        //static EnergyCorrelator _helper_correlator = EnergyCorrelator(1,1.0, _measure, _strategy);
 
         double energy(const PseudoJet& jet) const;
         double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const;
@@ -777,6 +778,58 @@ namespace contrib{
         return numerator/denominator;
 
     }
+
+
+
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorUseries
+/// A class to calculate the observable used for Quark vs. Gluon Discrimination
+///     U_n = ECFN(n+1,beta,1),
+/// called \f$ U_i^{(\beta)} \f$ in the publication.
+
+    class EnergyCorrelatorUseries : public FunctionOfPseudoJet<double> {
+
+    public:
+
+        /// constructs a n 3-point to 2-point correlator ratio with
+        /// angular exponent beta, using the specified choice of energy and
+        /// angular measure as well one of two possible underlying
+        /// computational strategies
+        EnergyCorrelatorUseries(
+                int n,
+                double  beta,
+                EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {};
+
+        virtual ~EnergyCorrelatorUseries() {}
+
+        /// returns the value of the energy correlator ratio for a jet's
+        /// constituents. (Normally accessed by the parent class's
+        /// operator()).
+        double result(const PseudoJet& jet) const;
+
+        std::string description() const;
+
+    private:
+
+        int _n;
+        double _beta;
+        EnergyCorrelator::Measure _measure;
+        EnergyCorrelator::Strategy _strategy;
+
+    };
+
+
+    inline double EnergyCorrelatorUseries::result(const PseudoJet& jet) const {
+
+        double answer = EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
+        return answer;
+
+    }
+
+
+
 
 
 } // namespace contrib

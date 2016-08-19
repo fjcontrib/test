@@ -1,8 +1,8 @@
 //  EnergyCorrelator Package
-//  Questions/Comments?  larkoski@mit.edu gavin.salam@cern.ch jthaler@jthaler.net lnecib@mit.edu
+//  Questions/Comments?  larkoski@mit.edu lnecib@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
 //
 //  Copyright (c) 2013-2016
-//  Andrew Larkoski, Gavin Salam, and Jesse Thaler
+//  Andrew Larkoski, Lina Necib, Gavin Salam, and Jesse Thaler
 //
 //  $Id$
 //----------------------------------------------------------------------
@@ -902,12 +902,14 @@ namespace contrib{
 
 
     double EnergyCorrelatorNormalized::energy(const PseudoJet& jet) const {
-        return _helper_correlator.energy(jet);
+        return EnergyCorrelator(1,1.0, _measure, _strategy).energy(jet);
+        //return _helper_correlator.energy(jet);
     }
 
 
     double EnergyCorrelatorNormalized::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
-        return _helper_correlator.angleSquared(jet1, jet2);
+        return EnergyCorrelator(1,1.0, _measure, _strategy).angleSquared(jet1,jet2);
+        //return _helper_correlator.angleSquared(jet1, jet2);
     }
 
 
@@ -1028,7 +1030,12 @@ namespace contrib{
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
-
+    string EnergyCorrelatorUseries::description() const {
+        ostringstream oss;
+        oss << "Energy Correlator observable U_n ECFN(n+1,beta,1) for ";
+        oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
+        return oss.str();
+    }
 
 
 

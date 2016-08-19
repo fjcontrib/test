@@ -10,7 +10,15 @@ energy correlation functions was described in
 
    Power Counting to Better Jet Observables.
    Andrew J. Larkoski, Ian Moult, and Duff Neill.
+   JHEP 1412, 009 (2014) 
    arXiv:1409.6298.
+
+Additional observables based on generalizations of the energy
+correlation functions are described in
+
+   New Angles on Energy Correlation Functions.
+   Ian Moult, Lina Necib, and Jesse Thaler.
+   arXiv:16xx.yyyyy.
 
 This FastJet-contrib package contains four classes derived from
 FunctionOfPseudoJet<double> :
