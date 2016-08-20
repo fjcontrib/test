@@ -790,9 +790,9 @@ namespace contrib{
                     for (unsigned int j = i + 1; j < particles.size(); j++) {
                         for (unsigned int k = j + 1; k < particles.size(); k++) {
 
-                            angle1 = angleSquared(particles[i], particles[j]);
-                            angle2 = angleSquared(particles[i], particles[k]);
-                            angle3 = angleSquared(particles[j], particles[k]);
+                            angle1 = pow(angleSquared(particles[i], particles[j]), half_beta);
+                            angle2 = pow(angleSquared(particles[i], particles[k]), half_beta);
+                            angle3 = pow(angleSquared(particles[j], particles[k]), half_beta);
 
                             double angle_list[] = {angle1, angle2, angle3};
                             std::vector<double> angle_vector(angle_list, angle_list + N_total);
@@ -820,12 +820,12 @@ namespace contrib{
                         for (unsigned int k = j + 1; k < particles.size(); k++) {
                             for (unsigned int l = k + 1; l < particles.size(); l++) {
 
-                                angle1 = angleSquared(particles[i], particles[j]);
-                                angle2 = angleSquared(particles[i], particles[k]);
-                                angle3 = angleSquared(particles[i], particles[l]);
-                                angle4 = angleSquared(particles[j], particles[k]);
-                                angle5 = angleSquared(particles[j], particles[l]);
-                                angle6 = angleSquared(particles[k], particles[l]);
+                                angle1 = pow(angleSquared(particles[i], particles[j]), half_beta);
+                                angle2 = pow(angleSquared(particles[i], particles[k]), half_beta);
+                                angle3 = pow(angleSquared(particles[i], particles[l]), half_beta);
+                                angle4 = pow(angleSquared(particles[j], particles[k]), half_beta);
+                                angle5 = pow(angleSquared(particles[j], particles[l]), half_beta);
+                                angle6 = pow(angleSquared(particles[k], particles[l]), half_beta);
 
                                 double angle_list[] = {angle1, angle2, angle3, angle4, angle5, angle6};
                                 std::vector<double> angle_vector(angle_list, angle_list + N_total);
@@ -855,16 +855,16 @@ namespace contrib{
                             for (unsigned int l = k + 1; l < particles.size(); l++) {
                                 for (unsigned int m = l + 1; m < particles.size(); m++) {
 
-                                    angle1 = angleSquared(particles[i], particles[j]);
-                                    angle2 = angleSquared(particles[i], particles[k]);
-                                    angle3 = angleSquared(particles[i], particles[l]);
-                                    angle4 = angleSquared(particles[j], particles[k]);
-                                    angle5 = angleSquared(particles[j], particles[l]);
-                                    angle6 = angleSquared(particles[k], particles[l]);
-                                    angle7 = angleSquared(particles[m], particles[i]);
-                                    angle8 = angleSquared(particles[m], particles[j]);
-                                    angle9 = angleSquared(particles[m], particles[k]);
-                                    angle10 = angleSquared(particles[m], particles[l]);
+                                    angle1 = pow(angleSquared(particles[i], particles[j]), half_beta);
+                                    angle2 = pow(angleSquared(particles[i], particles[k]), half_beta);
+                                    angle3 = pow(angleSquared(particles[i], particles[l]), half_beta);
+                                    angle4 = pow(angleSquared(particles[j], particles[k]), half_beta);
+                                    angle5 = pow(angleSquared(particles[j], particles[l]), half_beta);
+                                    angle6 = pow(angleSquared(particles[k], particles[l]), half_beta);
+                                    angle7 = pow(angleSquared(particles[m], particles[i]), half_beta);
+                                    angle8 = pow(angleSquared(particles[m], particles[j]), half_beta);
+                                    angle9 = pow(angleSquared(particles[m], particles[k]), half_beta);
+                                    angle10 = pow(angleSquared(particles[m], particles[l]), half_beta);
 
                                     double angle_list[] = {angle1, angle2, angle3, angle4, angle5, angle6,
                                                            angle7, angle8, angle9, angle10};
