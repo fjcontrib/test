@@ -395,6 +395,24 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
+                cout << "EnergyCorrelatorCseries:  C_i(beta) = ECFN(i-1, beta)*ECFN(i+1, beta)/ECFN(i, beta)^2 with " << modename[M] << endl;
+                cout << "-------------------------------------------------------------------------------------" << endl;
+                printf("%7s %20s %20s %20s \n","beta", "N=1", "N=2", "N=3");
+
+                for (unsigned int B = 0; B < betalist.size(); B++) {
+                    double beta = betalist[B];
+
+                    EnergyCorrelatorCseries C1(1,beta,measurelist[M]);
+                    EnergyCorrelatorCseries C2(2,beta,measurelist[M]);
+                    EnergyCorrelatorCseries C3(3,beta,measurelist[M]);
+
+
+                    printf("%7.3f %20.10f %20.10f %20.10f \n",beta,C1(myJet),C2(myJet),C3(myJet));
+                }
+                cout << "-------------------------------------------------------------------------------------" << endl << endl;
+
+
+                cout << "-------------------------------------------------------------------------------------" << endl;
                 cout << "EnergyCorrelatorUseries:  U_i(beta) = ECFN(i+1, beta, 1) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %20s %20s %20s \n","beta", "N=1", "N=2", "N=3");
@@ -421,7 +439,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
                     EnergyCorrelatorU1 U1(beta,measurelist[M]);
 
-                    printf("%7.3f %14.6f \n",beta,U1(myJet));
+                    printf("%7.3f %14.10f \n",beta,U1(myJet));
                 }
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
@@ -435,7 +453,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
                     EnergyCorrelatorU2 U2(beta,measurelist[M]);
 
-                    printf("%7.3f %14.6f \n",beta,U2(myJet));
+                    printf("%7.3f %14.10f \n",beta,U2(myJet));
                 }
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
@@ -449,7 +467,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
                     EnergyCorrelatorU3 U3(beta,measurelist[M]);
 
-                    printf("%7.3f %14.6f \n",beta,U3(myJet));
+                    printf("%7.3f %14.10f \n",beta,U3(myJet));
                 }
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 

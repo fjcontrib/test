@@ -285,6 +285,7 @@ namespace contrib{
 
         // Throw an error if N < 0
         if (_N < 0 ) throw Error("N cannot be negative");
+        
         // get N = 0 case out of the way
         if (_N == 0) return 1.0;
 
@@ -1026,6 +1027,13 @@ namespace contrib{
         ostringstream oss;
         oss << "Energy Correlator observable M2 ECFN(3,beta,1)/ECFN(2,beta,1) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
+        return oss.str();
+    }
+
+    string EnergyCorrelatorCseries::description() const {
+        ostringstream oss;
+        oss << "Energy Correlator double ratio ECFN(N-1,beta)ECFN(N+1,beta)/ECFN(N,beta)^2 for ";
+        oss << EnergyCorrelator(_N,_beta,_measure,_strategy).description_parameters();
         return oss.str();
     }
 

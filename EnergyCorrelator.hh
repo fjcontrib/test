@@ -47,7 +47,7 @@ namespace contrib{
 /// defined in arXiv:16xx.yyyyy by Moult, Necib and Thaler.
 ///
 ///
-/// <p>There are 7 main classes:
+/// <p>There are 8 main classes:
 ///
 /// - EnergyCorrelator
 /// - EnergyCorrelatorRatio
@@ -56,6 +56,7 @@ namespace contrib{
 /// - EnergyCorrelatorNseries
 /// - EnergyCorrelatorMseries
 /// - EnergyCorrelatorUseries
+/// - EnergyCorrelatorCseries
 ///
 /// And Aliases:
 /// - EnergyCorrelatorC1
@@ -75,7 +76,8 @@ namespace contrib{
 /// EnergyCorrelationD2 has been shown to be the optimal discrimination
 /// observable for boosted 2-prong jets.
 ///
-/// See the file example.cc for an illustration of usage.
+/// See the file example.cc for an illustration of usage  and example_basic_usage for
+/// the most commonly used functions.     
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelator
@@ -215,14 +217,11 @@ namespace contrib{
 /// Calculates the double ratio of energy correlators, ECF(N-1,beta)*ECF(N+1)/ECF(N,beta)^2.
 ///
 /// A class to calculate a double ratio of energy correlators,
-///     ECF(N-1,beta)*ECF(N+1)/ECF(N,beta)^2,
+///     ECF(N-1,beta)*ECF(N+1,beta)/ECF(N,beta)^2,
 /// called \f$C_N^{(\beta)}\f$ in the publication, and equal to
 /// \f$ r_N^{(\beta)}/r_{N-1}^{(\beta)} \f$.
 ///
-/// Of the different energy correlator classes, this is the one
-/// recommended for quark/gluon discrimination (N=1) and for boosted
-/// N-prong object discrimination (N=2 for boosted W/Z/H, N=3 for
-/// boosted top).
+
     class EnergyCorrelatorDoubleRatio : public FunctionOfPseudoJet<double> {
 
     public:
@@ -788,6 +787,56 @@ namespace contrib{
     }
 
 
+//------------------------------------------------------------------------
+/// \class EnergyCorrelatorCseries
+/// Calculates the C series energy correlators, ECFN(N-1,beta)*ECFN(N+1,beta)/ECFN(N,beta)^2.
+/// This is equivalent to the double ratio.
+///
+/// A class to calculate a double ratio of energy correlators,
+///     ECFN(N-1,beta)*ECFN(N+1,beta)/ECFN(N,beta)^2,
+/// called \f$C_N^{(\beta)}\f$ in the publication, and equal to
+/// \f$ r_N^{(\beta)}/r_{N-1}^{(\beta)} \f$.
+///
+
+    class EnergyCorrelatorCseries : public FunctionOfPseudoJet<double> {
+
+    public:
+
+        EnergyCorrelatorCseries(int N,
+                                    double beta,
+                                    EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R,
+                                    EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
+
+        virtual ~EnergyCorrelatorCseries() {}
+
+
+        /// returns the value of the energy correlator double-ratio for a
+        /// jet's constituents. (Normally accessed by the parent class's
+        /// operator()).
+        double result(const PseudoJet& jet) const;
+
+        std::string description() const;
+
+    private:
+
+        int _N;
+        double _beta;
+        EnergyCorrelator::Measure _measure;
+        EnergyCorrelator::Strategy _strategy;
+
+
+    };
+
+
+    inline double EnergyCorrelatorCseries::result(const PseudoJet& jet) const {
+
+        double numerator = EnergyCorrelatorNormalized(_N - 1, _beta, -1, _measure, _strategy).result(jet) * EnergyCorrelatorNormalized(_N + 1, _beta, -1, _measure, _strategy).result(jet);
+        double denominator = pow(EnergyCorrelatorNormalized(_N, _beta, -1, _measure, _strategy).result(jet), 2.0);
+
+        return numerator/denominator;
+
+    }
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorUseries
