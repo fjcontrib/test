@@ -41,6 +41,10 @@ namespace contrib{
 
         // find constituents
         std::vector<fastjet::PseudoJet> particles = jet.constituents();
+
+        // return zero if the number of constituents is less than _N for the ECFN
+        if (particles.size() < _N) return 0.0 ;
+
         double answer = 0.0;
 
         // take care of N = 1 case.
@@ -295,6 +299,9 @@ namespace contrib{
         // find constituents
         std::vector<fastjet::PseudoJet> particles = jet.constituents();
         double answer = 0.0;
+
+        // return zero if the number of constituents is less than _N for the ECFN
+        if (particles.size() < _N) return 0.0 ;
 
         // The normalization is the energy or pt of the jet, which is also ECF(1, beta)
         double EJ = EnergyCorrelator(1, _beta, _measure, _strategy).result(jet);
@@ -616,6 +623,12 @@ namespace contrib{
 
         // find constituents
         std::vector<fastjet::PseudoJet> particles = jet.constituents();
+
+        // return zero if the number of constituents is less than _N for the ECFN
+        if (particles.size() < _N) {
+            std::vector<double> ans (_N, 0.0);
+            return ans;
+        }
 
         // The normalization is the energy or pt of the jet, which is also ECF(1, beta)
         double EJ = EnergyCorrelator(1, _beta, _measure, _strategy).result(jet);

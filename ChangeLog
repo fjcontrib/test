@@ -1,3 +1,18 @@
+2016-08-23 Lina Necib  <lnecib@mit.edu>
+
+	*VERSION:
+	*NEWS:
+	*AUTHORS:
+	*COPYING:
+	*README:
+	*EnergyCorrelator.cc
+	Added if statement that the ECF and ECFNs return exactly zero
+ 	if the number of particles is less than N of the ECF.
+	*EnergyCorrelator.hh
+	*example.cc	
+	*example_basic_usage.cc
+	Updated this example.
+
 2016-08-21 Lina Necib  <lnecib@mit.edu>
 
 	*VERSION:
