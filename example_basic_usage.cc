@@ -112,111 +112,120 @@ void analyze(const vector<PseudoJet> & input_particles) {
             // The angularity is set by the value of beta
             double beta;
 
-
             cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorC1:  C_1^(beta) = ECF(2,beta)/ECF(1,beta)^2 " << endl;
+            cout << "EnergyCorrelator: C series " << endl;
             cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s \n","beta","C1 obs");
+            printf("%7s %14s %14s %14s\n","beta", "C1", "C2", "C3");
 
 
             beta = 1.0;
-            EnergyCorrelatorC1 c1(beta);
-            printf("%7.3f %14.6f \n",beta,c1(myJet));
-
-            cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorC2:  C_2^(beta) = ECF(3,beta)*ECF(1,beta)/ECF(2,beta)^2 " << endl;
-            cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s \n","beta","C2 obs");
+            //Defining the Cseries for beta= 1.0
+            EnergyCorrelatorC1 C1s(beta);
+            EnergyCorrelatorC2 C2s(beta);
+            EnergyCorrelatorCseries C3s(3, beta);
 
 
-            beta = 1.0;
-            EnergyCorrelatorC2 c2(beta);
-            printf("%7.3f %14.6f \n",beta,c2(myJet));
+            printf("%7.3f %14.6f %14.6f %14.6f\n",beta,C1s(myJet),C2s(myJet),C3s(myJet));
+
+            beta = 2.0;
+            //Defining the Cseries for beta= 1.0
+            EnergyCorrelatorCseries C1s_2(1, beta);
+            EnergyCorrelatorCseries C2s_2(2, beta);
+            EnergyCorrelatorCseries C3s_2(3, beta);
+
+
+            printf("%7.3f %14.6f %14.6f %14.6f\n",beta,C1s_2(myJet),C2s_2(myJet),C3s_2(myJet));
+
 
             cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorD2:  D_2^(beta) = ECF(3,beta)*ECF(1,beta)^3/ECF(2,beta)^3 " << endl;
+            cout << "EnergyCorrelator: D2, orignal (alpha=beta) and generalized " << endl;
             cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s \n","beta","D2 obs");
+            printf("%7s %14s %14s %14s\n","beta","D2", "D2(alpha=1)", "D2(alpha=2)");
 
 
             beta = 1.0;
             EnergyCorrelatorD2 d2(beta);
-            printf("%7.3f %14.6f \n",beta,d2(myJet));
-            beta = 2.0;
-            EnergyCorrelatorD2 d2_2(beta);
-            printf("%7.3f %14.6f \n",beta,d2_2(myJet));
-
-
-            cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorGeneralizedD2:  D_2^(alpha, beta) = ECFN(3,alpha)/ECFN(2,beta)^(3*alpha/beta) " << endl;
-            cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %20s\n","beta","alpha = 1.000");
-
-            beta = 2.0;
-            printf("%7.3f ", beta);
             double alpha = 1.0;
             EnergyCorrelatorGeneralizedD2 d2_generalized(alpha, beta);
-            printf("%20.4f ", d2_generalized(myJet));
-            printf("\n");
+            alpha = 2.0;
+            EnergyCorrelatorGeneralizedD2 d2_generalized_2(alpha, beta);
+
+            printf("%7.3f %14.6f %14.6f %14.6f\n",beta,d2(myJet), d2_generalized(myJet), d2_generalized_2(myJet));
+            beta = 2.0;
+            EnergyCorrelatorD2 d2_2(beta);
+            alpha = 1.0;
+            EnergyCorrelatorGeneralizedD2 d2_generalized_3(alpha, beta);
+            alpha = 2.0;
+            EnergyCorrelatorGeneralizedD2 d2_generalized_4(alpha, beta);
+            printf("%7.3f %14.6f %14.6f %14.6f\n",beta,d2_2(myJet), d2_generalized_3(myJet), d2_generalized_4(myJet));
+
 
             cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorN2:  N2(beta) = ECFN(3, beta, 2)/ECFN(2, beta, 1)^2 " << endl;
+            cout << "EnergyCorrelator: N series  " << endl;
             cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s \n","beta", "N2 obs");
+            printf("%7s %14s %14s\n","beta", "N2", "N3");
 
 
             beta = 1.0;
-            // Directly defining the EnergyCorrelator N2
+            // Directly defining the EnergyCorrelator N2 and N3
             EnergyCorrelatorN2 N2(beta);
-            printf("%7.3f %14.6f \n",beta,N2(myJet));
+            EnergyCorrelatorN3 N3(beta);
+            printf("%7.3f %14.6f %14.6f\n",beta, N2(myJet), N3(myJet));
 
             beta = 2.0;
             EnergyCorrelatorN2 N2_2(beta);
-            printf("%7.3f %14.6f \n",beta,N2_2(myJet));
-
-            cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorN3:  N3(beta) = ECFN(4, beta, 2)/ECFN(3, beta, 1)^2 " << endl;
-            cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s \n","beta", "N3 obs");
-
-            beta = 1.0;
-            EnergyCorrelatorN3 N3(beta);
-            printf("%7.3f %14.6f \n",beta,N3(myJet));
-            beta = 2.0;
             EnergyCorrelatorN3 N3_2(beta);
-            printf("%7.3f %14.6f \n",beta,N3_2(myJet));
+            printf("%7.3f %14.6f %14.6f\n",beta, N2_2(myJet), N3_2(myJet));
 
 
             cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorM2:  M2(beta) = ECFN(3, beta, 1)/ECFN(3, beta, 1) " << endl;
+            cout << "EnergyCorrelator: M series " << endl;
             cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s \n","beta", "M2 obs");
-
+            printf("%7s %14s %14s\n","beta", "M2", "M3");
 
             beta = 1.0;
             //Directly defining M2
             EnergyCorrelatorM2 M2(beta);
-            printf("%7.3f %14.6f \n",beta,M2(myJet));
+            EnergyCorrelatorMseries M3(3, beta);
+            printf("%7.3f %14.6f %14.6f\n", beta, M2(myJet), M3(myJet));
 
             beta = 2.0;
             EnergyCorrelatorM2 M2_2(beta);
-            printf("%7.3f %14.6f \n",beta,M2_2(myJet));
+            EnergyCorrelatorMseries M3_2(3, beta);
+            printf("%7.3f %14.6f %14.6f\n", beta, M2_2(myJet), M3_2(myJet));
 
             cout << "-------------------------------------------------------------------------------------" << endl;
-            cout << "EnergyCorrelatorU1, EnergyCorrelatorU2, EnergyCorrelatorU3:  U_i(beta) = ECFN(i+1, beta, 1) " << endl;
+            cout << "EnergyCorrelator: U series " << endl;
             cout << "-------------------------------------------------------------------------------------" << endl;
-            printf("%7s %14s %14s %14s \n","beta", "U1", "U2", "U3");
+            printf("%7s %14s %14s %14s\n","beta", "U1", "U2", "U3");
 
 
-            beta = 1.0;
+            beta = 0.5;
             //Defining the Useries for beta= 1.0
             EnergyCorrelatorU1 U1s(beta);
             EnergyCorrelatorU2 U2s(beta);
             EnergyCorrelatorU3 U3s(beta);
 
 
-            printf("%7.3f %14.6f %14.6f %14.6f \n",beta,U1s(myJet),U2s(myJet),U3s(myJet));
+            printf("%7.3f %14.8f %14.8f %14.8f\n",beta,U1s(myJet),U2s(myJet),U3s(myJet));
 
+            beta = 1.0;
+            //Defining the Useries for beta= 1.0
+            EnergyCorrelatorU1 U1s_2(beta);
+            EnergyCorrelatorU2 U2s_2(beta);
+            EnergyCorrelatorU3 U3s_2(beta);
+
+
+            printf("%7.3f %14.8f %14.8f %14.8f\n",beta,U1s_2(myJet),U2s_2(myJet),U3s_2(myJet));
+
+            beta = 2.0;
+            //Defining the Useries for beta= 1.0
+            EnergyCorrelatorU1 U1s_3(beta);
+            EnergyCorrelatorU2 U2s_3(beta);
+            EnergyCorrelatorU3 U3s_3(beta);
+
+
+            printf("%7.3f %14.8f %14.8f %14.8f\n",beta,U1s_3(myJet),U2s_3(myJet),U3s_3(myJet));
         }
     }
 }
