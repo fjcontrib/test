@@ -125,7 +125,7 @@ EnergyCorrelatorMseries(int i, double beta, Measure measure)
 
 EnergyCorrelatorM2(double beta, Measure measure)
 
-  Called M_2^(alpha, beta) in arXiv:160X.XXXXX  
+  Called M_2^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,beta,1)/ECFN(2,beta,1).
   Useful for groomed 2-prong object tagging.
 
@@ -139,19 +139,19 @@ EnergyCorrelatorUseries(int i, double beta, Measure measure)
 
 EnergyCorrelatorU1(double beta, Measure measure)
 
-  Called U_1^(alpha, beta) in arXiv:160X.XXXXX  
+  Called U_1^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(2,beta,1).
   Useful for quark vs. gluon discrimination.
 
 EnergyCorrelatorU2(double beta, Measure measure)
 
-  Called U_2^(alpha, beta) in arXiv:160X.XXXXX  
+  Called U_2^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,beta,1).
   Useful for quark vs. gluon discrimination.
 
 EnergyCorrelatorU3(double beta, Measure measure)
 
-  Called U_3^(alpha, beta) in arXiv:160X.XXXXX  
+  Called U_3^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(4,beta,1).
   Useful for quark vs. gluon discrimination.
 ----------------------------------------------------------------------------
