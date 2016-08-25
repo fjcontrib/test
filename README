@@ -79,7 +79,7 @@ EnergyCorrelatorNormalized(int N, double beta, int angles, Measure measure)
   ECFN(N,beta,angles), where i=angles and j=N.  As for EnergyCorrelator,
   beta is the angular exponent, while measure = pt_R (default) or E_theta
   sets how energies and angles are determined.  The integer angles
-  determines the number of angle pairs in the observable.  The default
+  determines the number of angles in the observable.  The default
   angles = -1 sets angles = N choose 2, which corresponds to the N-point
   normalized (dimensionless) correlation function, with 
   ECFN(N,beta,N choose 2) = ECF(N, beta)/ECF(1,beta)^N
@@ -94,7 +94,8 @@ EnergyCorrelatorGeneralizedD2(double alpha, double beta, Measure measure)
 
   Called D_2^(alpha, beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,alpha)/ECFN(2,beta)^(3 alpha/beta).  
-  Useful for groomed 2-prong object tagging.
+  Useful for groomed 2-prong object tagging. We recommend the use of alpha=1
+  and beta=2. 
 
 ----------------------------------------------------------------------------
   
@@ -128,6 +129,31 @@ EnergyCorrelatorM2(double beta, Measure measure)
   Equals ECFN(3,beta,1)/ECFN(2,beta,1).
   Useful for groomed 2-prong object tagging.
 
+
+----------------------------------------------------------------------------
+
+EnergyCorrelatorUseries(int i, double beta, Measure measure)
+
+  Called U_i^(beta) in arXiv:160X.XXXXX  
+  Equals ECFN(n+1,beta,1).  
+
+EnergyCorrelatorU1(double beta, Measure measure)
+
+  Called U_1^(alpha, beta) in arXiv:160X.XXXXX  
+  Equals ECFN(2,beta,1).
+  Useful for quark vs. gluon discrimination.
+
+EnergyCorrelatorU2(double beta, Measure measure)
+
+  Called U_2^(alpha, beta) in arXiv:160X.XXXXX  
+  Equals ECFN(3,beta,1).
+  Useful for quark vs. gluon discrimination.
+
+EnergyCorrelatorU3(double beta, Measure measure)
+
+  Called U_3^(alpha, beta) in arXiv:160X.XXXXX  
+  Equals ECFN(4,beta,1).
+  Useful for quark vs. gluon discrimination.
 ----------------------------------------------------------------------------
 
 The argument Measure in each of the above functions sets how energies
@@ -155,8 +181,9 @@ uses particle energies and angles and is also appropriate for e+e-
 collider applications. In this case “theta” is replaced by Mandelstam 
 invariants with the same behavior in the collinear limits, leading to a more 
 calculation friendly observables. The "energy" is defined as the jet energy
-and the angle between 2 jets is computed from the dot product of the 4 vectors
-p1 and p2. 
+and the "angle squared" is defined as  (2p_i \cdot p_j/E_i E_j), 
+where p_i,p_j are the momenta of the jets i adn j, and E_i, E_j are their
+respective energies.
 
 General usage is shown in the example.cc program, and recommended usage 
 is shown in example_basic_usage.cc.
