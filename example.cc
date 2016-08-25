@@ -237,7 +237,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 cout << "EnergyCorrelatorGeneralizedD2:  D_2^(alpha, beta) = ECFN(3,alpha)/ECFN(2,beta)^(3*alpha/beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                printf("%7s %20s %20s %20s %20s\n","beta","alpha = 0.100","alpha = 0.200","alpha = 0.500","alpha = 1.000");
+                printf("%7s %18s %18s %18s %18s\n","beta","alpha = 0.100","alpha = 0.200","alpha = 0.500","alpha = 1.000");
 
                 for (unsigned int B = 1; B < betalist.size(); B++) {
                     double beta = betalist[B];
@@ -248,7 +248,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
                         EnergyCorrelatorGeneralizedD2 d2(alpha, beta, measurelist[M]);
 
-                        printf("%20.4f ", d2(myJet));
+                        printf("%18.4f ", d2(myJet));
                     }
                     printf("\n");
                 }
