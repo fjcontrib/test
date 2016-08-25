@@ -1,5 +1,7 @@
 //  EnergyCorrelator Package
-//  Questions/Comments?  larkoski@mit.edu lnecib@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
+//  Questions/Comments?  Email the authors:
+//    larkoski@mit.edu, lnecib@mit.edu,
+//    gavin.salam@cern.ch jthaler@jthaler.net
 //
 //  Copyright (c) 2013-2016
 //  Andrew Larkoski, Lina Necib, Gavin Salam, and Jesse Thaler
@@ -29,7 +31,7 @@ using namespace std;
 
 FASTJET_BEGIN_NAMESPACE      // defined in fastjet/internal/base.hh
 
-namespace contrib{
+namespace contrib {
 
     double EnergyCorrelator::result(const PseudoJet& jet) const {
 
@@ -42,7 +44,7 @@ namespace contrib{
         // find constituents
         std::vector<fastjet::PseudoJet> particles = jet.constituents();
 
-        // return zero if the number of constituents is less than _N for the ECFN
+        // return zero if the number of constituents is less than _N
         if (particles.size() < _N) return 0.0 ;
 
         double answer = 0.0;
@@ -304,14 +306,14 @@ namespace contrib{
         if (particles.size() < _N) return 0.0 ;
 
         // The normalization is the energy or pt of the jet, which is also ECF(1, beta)
-        double EJ = EnergyCorrelator(1, _beta, _measure, _strategy).result(jet);
+        double EJ = _helper_correlator.result(jet);
 
         // The overall normalization
         double norm = pow(EJ, _N);
 
         // Find the max number of angles and throw an error if unsuitable
         int N_total = int(_N*(_N-1)/2);
-        if(_angles > N_total) throw Error("Requested number of angles for EnergyCorrelatorNormalized is larger than number of angles available");
+        if (_angles > N_total) throw Error("Requested number of angles for EnergyCorrelatorNormalized is larger than number of angles available");
         if (_angles < -1) throw Error("Negative number of angles called for EnergyCorrelatorNormalized");
 
         double half_beta = _beta/2.0;
@@ -631,7 +633,7 @@ namespace contrib{
         }
 
         // The normalization is the energy or pt of the jet, which is also ECF(1, beta)
-        double EJ = EnergyCorrelator(1, _beta, _measure, _strategy).result(jet);
+        double EJ = _helper_correlator.result(jet);
 
         // The overall normalization
         double norm = pow(EJ, _N);
@@ -639,11 +641,7 @@ namespace contrib{
         // Find the max number of angles and throw an error if it unsuitable
         int N_total = _N * (_N - 1)/2;
 
-        if(_angles > N_total) throw Error("Requested number of angles larger than number of angles available");
-        if (_angles < -1) throw Error("Negative number of angles");
-
         double half_beta = _beta/2.0;
-
 
         // take care of N = 2 case.
         if (_N == 2) {
@@ -914,17 +912,15 @@ namespace contrib{
     }
 
 
-
+    // call _helper_correlator to get energy information
     double EnergyCorrelatorNormalized::energy(const PseudoJet& jet) const {
         return _helper_correlator.energy(jet);
     }
-
-
+ 
+    // call _helper_correlator to get angle information
     double EnergyCorrelatorNormalized::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
         return _helper_correlator.angleSquared(jet1, jet2);
     }
-
-
 
     string EnergyCorrelator::description_parameters() const {
         ostringstream oss;

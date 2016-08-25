@@ -1,4 +1,9 @@
-2016-XX-YY: Release of version 1.2.0, added N2, N3, M2, Generalized D2, ECFNS, NSeries and MSeries
-2014-11-13: Release of version 1.1.0, added C1, C2, and D2 observables
-2013-05-01: Release of version 1.0.1, with improved error reporting
-2013-04-30: Release of version 1.0.0
+2016-XX-YY: Release of version 1.2.0:
+   Incorporates the generalized energy correlation functions
+   and adds the NSeries, MSeries, and GeneralizedD2 observables
+2014-11-13: Release of version 1.1.0:
+   Added the C1, C2, and D2 observables
+2013-05-01: Release of version 1.0.1:
+   Improved error reporting
+2013-04-30: Release of version 1.0.0:
+   Initial release

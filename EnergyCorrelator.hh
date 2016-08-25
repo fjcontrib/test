@@ -2,7 +2,9 @@
 #define __FASTJET_CONTRIB_ENERGYCORRELATOR_HH__
 
 //  EnergyCorrelator Package
-//  Questions/Comments?  larkoski@mit.edu lnecib@mit.edu gavin.salam@cern.ch jthaler@jthaler.net
+//  Questions/Comments?  Email the authors.
+//    larkoski@mit.edu, lnecib@mit.edu,
+//    gavin.salam@cern.ch jthaler@jthaler.net
 //
 //  Copyright (c) 2013-2016
 //  Andrew Larkoski, Lina Necib Gavin Salam, and Jesse Thaler
@@ -47,37 +49,47 @@ namespace contrib{
 /// defined in arXiv:16xx.yyyyy by Moult, Necib and Thaler.
 ///
 ///
-/// <p>There are 8 main classes:
+/// <p>There are 4 main classes:
 ///
 /// - EnergyCorrelator
 /// - EnergyCorrelatorRatio
 /// - EnergyCorrelatorDoubleRatio
 /// - EnergyCorrelatorNormalized
+///
+/// <p>There are five classes that define useful combinations of the ECFs.
+///
 /// - EnergyCorrelatorNseries
 /// - EnergyCorrelatorMseries
 /// - EnergyCorrelatorUseries
-/// - EnergyCorrelatorCseries
-///
-/// And Aliases:
-/// - EnergyCorrelatorC1
-/// - EnergyCorrelatorC2
 /// - EnergyCorrelatorD2
 /// - EnergyCorrelatorGeneralizedD2
-/// - EnergyCorrelatorN2
-/// - EnergyCorrelatorN3
-/// - EnergyCorrelatorM2
-/// - EnergyCorrelatorU1
-/// - EnergyCorrelatorU2
-/// - EnergyCorrelatorU3
 ///
-/// each of which is a FastJet
-/// FunctionOfPseudoJet. EnergyCorrelatorDoubleRatio in particular is
-/// useful for quark/gluon discrimination and boosted object tagging.
+/// <p> There are also aliases for easier access:
+/// - EnergyCorrelatorCseries (same as EnergyCorrelatorDoubleRatio)
+/// - EnergyCorrelatorC1      (EnergyCorrelatorCseries with i=1)
+/// - EnergyCorrelatorC2      (EnergyCorrelatorCseries with i=2)
+/// - EnergyCorrelatorN2      (EnergyCorrelatorNseries with i=2)
+/// - EnergyCorrelatorN3      (EnergyCorrelatorNseries with i=3)
+/// - EnergyCorrelatorM2      (EnergyCorrelatorMseries with i=2)
+/// - EnergyCorrelatorU1      (EnergyCorrelatorUseries with i=1)
+/// - EnergyCorrelatorU2      (EnergyCorrelatorUseries with i=2)
+/// - EnergyCorrelatorU3      (EnergyCorrelatorUseries with i=3)
+///
+/// Each of these classes is a FastJet FunctionOfPseudoJet.
+/// EnergyCorrelatorDoubleRatio (which is equivalent to EnergyCorrelatorCseries)
+/// is in particular is useful for quark/gluon discrimination and boosted
+/// object tagging.
+///
 /// EnergyCorrelationD2 has been shown to be the optimal discrimination
 /// observable for boosted 2-prong jets.
 ///
-/// See the file example.cc for an illustration of usage  and example_basic_usage for
-/// the most commonly used functions.     
+/// The EnergyCorrelatorNseries and EnergyCorrelatorMseries use
+/// generalized correlation functions with different angular scaling,
+/// and are intended for use on 2-prong and 3-prong jets.
+/// The EnergyCorrelatorUseries is useful for quark/gluon discrimimation.
+///
+/// See the file example.cc for an illustration of usage and
+/// example_basic_usage.cc for the most commonly used functions.
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelator
@@ -100,7 +112,8 @@ namespace contrib{
 /// Run times scale as n^N/N!, where n is the number of particles in a jet.
 
     class EnergyCorrelator : public FunctionOfPseudoJet<double> {
-        friend class EnergyCorrelatorNormalized;
+        friend class EnergyCorrelatorNormalized;  ///< This allow ECN to access the energy and angle definitions
+                                                  ///< of this class, which are otherwise private.
     public:
 
         enum Measure {
@@ -161,7 +174,6 @@ namespace contrib{
 // core EnergyCorrelator::result code in .cc file.
 
 
-
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorRatio
 /// A class to calculate the ratio of (N+1)-point to N-point energy correlators,
@@ -200,7 +212,6 @@ namespace contrib{
 
 
     };
-
 
     inline double EnergyCorrelatorRatio::result(const PseudoJet& jet) const {
 
@@ -425,7 +436,6 @@ namespace contrib{
 ///  - ...
 ///  where the z_i's are the energy fractions.
 ///
-
 /// When a new value of angles "a" is given, the ECFN are defined as
 ///  - ECFN(1,\f$ \beta, a)  = 1\f$
 ///  - ECFN(2,\f$ \beta, a)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
@@ -433,7 +443,6 @@ namespace contrib{
 ///  (\theta_{ij}, \theta_{jk}) )^\beta \f$
 ///  where min_a means the product of a elements of the following list.
 ///  - ...
-
 /// The correlation can be determined with energies and angles (as
 /// given above) or with transverse momenta and boost invariant angles
 /// (the code's default). The choice is controlled by
@@ -441,8 +450,6 @@ namespace contrib{
 ///
 /// The current implementation handles values of N up to and including 5.
 ///
-
-
     class EnergyCorrelatorNormalized : public FunctionOfPseudoJet<double> {
     public:
 
@@ -454,7 +461,7 @@ namespace contrib{
                                    int angles = -1,
                                    EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                                    EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _N(N), _beta(beta), _angles(angles), _measure(measure), _strategy(strategy),  _helper_correlator(1,1.0, _measure, _strategy) {};
+                : _N(N), _beta(beta), _angles(angles), _measure(measure), _strategy(strategy),  _helper_correlator(1,_beta, _measure, _strategy) {};
 
         /// destructor
         virtual ~EnergyCorrelatorNormalized(){}
@@ -790,7 +797,7 @@ namespace contrib{
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorCseries
 /// Calculates the C series energy correlators, ECFN(N-1,beta)*ECFN(N+1,beta)/ECFN(N,beta)^2.
-/// This is equivalent to the double ratio.
+/// This is equivalent to EnergyCorrelatorDoubleRatio
 ///
 /// A class to calculate a double ratio of energy correlators,
 ///     ECFN(N-1,beta)*ECFN(N+1,beta)/ECFN(N,beta)^2,
@@ -840,7 +847,7 @@ namespace contrib{
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorUseries
-/// A class to calculate the observable used for Quark vs. Gluon Discrimination
+/// A class to calculate the observable used for quark vs. gluon discrimination
 ///     U_n = ECFN(n+1,beta,1),
 /// called \f$ U_i^{(\beta)} \f$ in the publication.
 

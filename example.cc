@@ -28,7 +28,6 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <stdio.h>
-//#include <time.h>
 #include <ctime>
 #include <iostream>
 #include <istream>

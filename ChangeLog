@@ -1,3 +1,15 @@
+2016-08-24 Jesse Thaler  <jthaler@jthaler.net>
+
+        Minor comment fixes throughout.
+
+	* EnergyCorrelator.cc/hh
+	Put in _helper_correlator when defining overall normalization
+	Removed angle error for result_all_angles() 
+	*NEWS:
+	Made this more readable.
+	*README:
+	Clarified some of the documentation.
+
 2016-08-23 Lina Necib  <lnecib@mit.edu>
 
 	*VERSION:

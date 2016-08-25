@@ -20,8 +20,12 @@ correlation functions are described in
    Ian Moult, Lina Necib, and Jesse Thaler.
    arXiv:16xx.yyyyy.
 
-This FastJet-contrib package contains four classes derived from
-FunctionOfPseudoJet<double> :
+This FastJet-contrib package contains a number of classes derived from
+FunctionOfPseudoJet<double>.
+
+----------------------------------------------------------------------------
+
+The core classes from 1305.0007, and defined since version 1.0, are:
 
 EnergyCorrelator(int N, double beta, Measure measure)
 
@@ -40,6 +44,12 @@ EnergyCorrelatorDoubleRatio(int N, double beta, Measure measure)
   Called C_N^(beta) in arXiv:1305.0007.  Equals r_N/r_{N-1}.  This 
   observable provides good boosted N-prong object discrimination.
   (N=1 for quark/gluon, N=2 for boosted W/Z/H, N=3 for boosted top)
+  Also given in EnergyCorrelatorCseries as of version 1.2.
+
+----------------------------------------------------------------------------
+
+The D2 observable from 1409.6298, as well as C1 and C2 alias classes, were
+added in version 1.1:
 
 EnergyCorrelatorC1(double beta, Measure measure)
 
@@ -60,27 +70,34 @@ EnergyCorrelatorD2(double beta, Measure measure)
 
 ----------------------------------------------------------------------------
 
+Generalized energy correlators were introduced in 16xx.yyyyy and appear in
+version 1.2.  They are defined in the class:
+
 EnergyCorrelatorNormalized(int N, double beta, int angles, Measure measure)
 
-  Called ECFN(N,beta).  Corresponds to the N-point normalized (dimensionless)
-  correlation function, with beta the angular exponent, while measure
-  = pt_R (default) or E_theta sets how energies and angles are
-  determined.
-  ECFN(N, beta) = ECF(N, beta)/ECF(1,beta)^N
+  Called {}_i e_j^{(beta)} in 16xx.yyyyy, but will be denoted here as
+  ECFN(N,beta,angles), where i=angles and j=N.  As for EnergyCorrelator,
+  beta is the angular exponent, while measure = pt_R (default) or E_theta
+  sets how energies and angles are determined.  The integer angles
+  determines the number of angle pairs in the observable.  The default
+  angles = -1 sets angles = N choose 2, which corresponds to the N-point
+  normalized (dimensionless) correlation function, with 
+  ECFN(N,beta,N choose 2) = ECF(N, beta)/ECF(1,beta)^N
   
+From the generalized correlators, a variety of useful ratios are defined.
+They are mainly organized by series, with special values highlighted for
+recommended usage.
 
-  First defined in EnergyCorrelator 1.2.0-alpha0
 ----------------------------------------------------------------------------
 
 EnergyCorrelatorGeneralizedD2(double alpha, double beta, Measure measure)
 
   Called D_2^(alpha, beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,alpha)/ECFN(2,beta)^(3 alpha/beta).  
-  
+  Useful for groomed 2-prong object tagging.
 
-  First defined in EnergyCorrelator 1.2.0-alpha0
 ----------------------------------------------------------------------------
-
+  
 EnergyCorrelatorNseries(int i, double beta, Measure measure)
 
   Called N_i^(beta) in arXiv:160X.XXXXX  
@@ -89,14 +106,15 @@ EnergyCorrelatorNseries(int i, double beta, Measure measure)
 EnergyCorrelatorN2(double beta, Measure measure)
 
   Called N_2^(beta) in arXiv:160X.XXXXX  
-  Equals ECFN(3,beta,2)/ECFN(2,beta,1)^2.  
-
+  Equals ECFN(3,beta,2)/ECFN(2,beta,1)^2. 
+  Useful for groomed and ungroomed 2-prong object tagging.
+ 
 EnergyCorrelatorN3(double beta, Measure measure)
 
   Called N_3^(beta) in arXiv:160X.XXXXX  
   Equals ECFN(4,beta,2)/ECFN(3,beta,1)^2.  
+  Useful for groomed 3-prong object tagging.
 
-  First defined in EnergyCorrelator 1.2.0-alpha0
 ----------------------------------------------------------------------------
 
 EnergyCorrelatorMseries(int i, double beta, Measure measure)
@@ -108,11 +126,11 @@ EnergyCorrelatorM2(double beta, Measure measure)
 
   Called M_2^(alpha, beta) in arXiv:160X.XXXXX  
   Equals ECFN(3,beta,1)/ECFN(2,beta,1).
+  Useful for groomed 2-prong object tagging.
 
-  First defined in EnergyCorrelator 1.2.0-alpha0
 ----------------------------------------------------------------------------
 
-The argument Measure in each of these functions sets how energies
+The argument Measure in each of the above functions sets how energies
 and angles are defined in the observable.  The measure 
   
   pt_R
@@ -140,5 +158,6 @@ calculation friendly observables. The "energy" is defined as the jet energy
 and the angle between 2 jets is computed from the dot product of the 4 vectors
 p1 and p2. 
 
-Usage is shown in the example.cc program, and recommended usage 
-is shown in example_basic_usage.cc .
+General usage is shown in the example.cc program, and recommended usage 
+is shown in example_basic_usage.cc.
+

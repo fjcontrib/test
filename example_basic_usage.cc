@@ -1,4 +1,4 @@
-// Example showing usage of energy correlator classes.
+// Example showing basic usage of energy correlator classes.
 //
 // Compile it with "make example" and run it with
 //
@@ -28,7 +28,6 @@
 #include <iomanip>
 #include <stdlib.h>
 #include <stdio.h>
-//#include <time.h>
 #include <ctime>
 #include <iostream>
 #include <istream>
@@ -128,9 +127,9 @@ void analyze(const vector<PseudoJet> & input_particles) {
             printf("%7.3f %14.6f %14.6f %14.6f\n",beta,C1s(myJet),C2s(myJet),C3s(myJet));
 
             beta = 2.0;
-            //Defining the Cseries for beta= 1.0
-            EnergyCorrelatorCseries C1s_2(1, beta);
-            EnergyCorrelatorCseries C2s_2(2, beta);
+            //Defining the Cseries for beta= 2.0
+            EnergyCorrelatorC1 C1s_2(beta);
+            EnergyCorrelatorC2 C2s_2(beta);
             EnergyCorrelatorCseries C3s_2(3, beta);
 
 
@@ -201,7 +200,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
 
             beta = 0.5;
-            //Defining the Useries for beta= 1.0
+            //Defining the Useries for beta= 0.5
             EnergyCorrelatorU1 U1s(beta);
             EnergyCorrelatorU2 U2s(beta);
             EnergyCorrelatorU3 U3s(beta);
@@ -219,7 +218,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
             printf("%7.3f %14.8f %14.8f %14.8f\n",beta,U1s_2(myJet),U2s_2(myJet),U3s_2(myJet));
 
             beta = 2.0;
-            //Defining the Useries for beta= 1.0
+            //Defining the Useries for beta= 2.0
             EnergyCorrelatorU1 U1s_3(beta);
             EnergyCorrelatorU2 U2s_3(beta);
             EnergyCorrelatorU3 U3s_3(beta);
