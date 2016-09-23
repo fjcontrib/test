@@ -113,7 +113,7 @@ namespace contrib{
 /// Run times scale as n^N/N!, where n is the number of particles in a jet.
 
     class EnergyCorrelator : public FunctionOfPseudoJet<double> {
-        friend class EnergyCorrelatorGeneralized;  ///< This allow ECN to access the energy and angle definitions
+        friend class EnergyCorrelatorGeneralized;  ///< This allow ECFG to access the energy and angle definitions
                                                   ///< of this class, which are otherwise private.
     public:
 
