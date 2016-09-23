@@ -457,7 +457,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorU3:  U3(beta) = ECFN(4, 1, beta) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorU3:  U3(beta) = ECFG(4, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "U3 obs");
 
@@ -564,6 +564,26 @@ void analyze(const vector<PseudoJet> & input_particles) {
                     clock_end = clock();
                     cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C4"<< endl;
 
+                    // test N2
+                    num_iter = 10;
+                    clock_begin = clock();
+
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorN2 N2(beta,measurelist[M],EnergyCorrelator::slow);
+                        N2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per N2"<< endl;
+
+                    num_iter = 300;
+                    clock_begin = clock();
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorN2 N2(beta,measurelist[M],EnergyCorrelator::storage_array);
+                        N2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per N2"<< endl;
+
                     // test N3
                     num_iter = 10;
                     clock_begin = clock();
@@ -583,6 +603,46 @@ void analyze(const vector<PseudoJet> & input_particles) {
                     }
                     clock_end = clock();
                     cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per N3"<< endl;
+
+                    // test M2
+                    num_iter = 10;
+                    clock_begin = clock();
+
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorM2 M2(beta,measurelist[M],EnergyCorrelator::slow);
+                        M2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M2"<< endl;
+
+                    num_iter = 300;
+                    clock_begin = clock();
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorM2 M2(beta,measurelist[M],EnergyCorrelator::storage_array);
+                        M2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M2"<< endl;
+
+                    // test M3
+                    num_iter = 10;
+                    clock_begin = clock();
+
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorMseries M3(3,beta,measurelist[M],EnergyCorrelator::slow);
+                        M3(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M3"<< endl;
+
+                    num_iter = 300;
+                    clock_begin = clock();
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorMseries M3(3,beta,measurelist[M],EnergyCorrelator::storage_array);
+                        M3(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M3"<< endl;
 
 
                 }

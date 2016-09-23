@@ -1,5 +1,13 @@
 2016-09-23 Lina Necib  <lnecib@mit.edu>
 
+	* EnergyCorrelator.cc
+	Made the evaluation of ECFG faster by replacing sort -> partial_sort and simplified multiplication syntax
+	* example.cc/ref
+	Fixed minor typo
+
+
+2016-09-23 Lina Necib  <lnecib@mit.edu>
+
 	* EnergyCorrelator.hh
 	Fixed minor doxygen typo
 	* example.cc/ref
