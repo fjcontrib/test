@@ -43,10 +43,11 @@ namespace contrib{
 /// correlators and their ratios as described in arXiv:1305.0007 by
 /// Larkoski, Salam and Thaler.  Additionally, the ratio observable
 /// D2 described in arXiv:1409.6298 by Larkoski, Moult and Neill
-/// is also included in this contrib. Finally, a normalized version of
-/// the energy correlation functions is added, as well as new observables
-/// N2, M2, a generalized version of D2, the MSeries and the NSeries, all
-/// defined in arXiv:16xx.yyyyy by Moult, Necib and Thaler.
+/// is also included in this contrib. Finally, a generalized version of
+/// the energy correlation functions is added, defined in
+/// arXiv:16xx.yyyyy by Moult, Necib and Thaler, which allow the
+/// definition of the M series, N series, and U series observables.
+/// There is also a generalized version of D2.
 ///
 ///
 /// <p>There are 4 main classes:
@@ -80,8 +81,8 @@ namespace contrib{
 /// is in particular is useful for quark/gluon discrimination and boosted
 /// object tagging.
 ///
-/// EnergyCorrelationD2 has been shown to be the optimal discrimination
-/// observable for boosted 2-prong jets.
+/// Using the original 2- and 3-point correlators, EnergyCorrelationD2 has
+/// been shown to be the optimal combination for boosted 2-prong tagging.
 ///
 /// The EnergyCorrelatorNseries and EnergyCorrelatorMseries use
 /// generalized correlation functions with different angular scaling,
@@ -97,10 +98,10 @@ namespace contrib{
 ///
 /// It is defined as follows
 ///
-///  - ECF(1,\f$ \beta)  = \sum_i E_i \f$
-///  - ECF(2,\f$ \beta)  = \sum_{i<j} E_i E_j \theta_{ij}^\beta \f$
-///  - ECF(3,\f$ \beta)  = \sum_{i<j<k} E_i E_j E_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
-///  - ECF(4,\f$ \beta)  = \sum_{i<j<k<l} E_i E_j E_k E_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
+///  - \f$ \mathrm{ECF}(1,\beta)  = \sum_i E_i \f$
+///  - \f$ \mathrm{ECF}(2,\beta)  = \sum_{i<j} E_i E_j \theta_{ij}^\beta \f$
+///  - \f$ \mathrm{ECF}(3,\beta)  = \sum_{i<j<k} E_i E_j E_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
+///  - \f$ \mathrm{ECF}(4,\beta)  = \sum_{i<j<k<l} E_i E_j E_k E_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
 ///  - ...
 ///
 /// The correlation can be determined with energies and angles (as
@@ -423,25 +424,30 @@ namespace contrib{
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorGeneralized
-/// We define ECF(N,beta)/ECF(1,beta) = ECFN(N,beta) as the normalized N-point energy correlation function,
-/// with an angular exponent beta.  We then generalize to v number of angles where the definition is
-/// ECFG(v, N, beta). When v = N choose 2 (or, for convenience, v = -1), EnergyCorrelatorGeneralized
-/// gives the original normalized energy correlation functions:
+/// A generalized and normalized version of the N-point energy correlators, with
+/// angular exponent beta and v number of pairwise angles.  When v = N choose 2
+/// (or, for convenience, v = -1), EnergyCorrelatorGeneralized just gives normalized
+/// versions of EnergyCorrelator:
+///  - \f$ \mathrm{ECFG}(-1,1,\beta) = \mathrm{ECFN}(N,\beta) = \mathrm{ECF}(N,\beta)/\mathrm{ECF}(1,\beta)\f$
 ///
-///  - ECFG(-1,1,\f$ \beta \f$) = ECFN(1,\f$ \beta \f$)
-///  - ECFN(1,\f$ \beta)  = 1\f$
-///  - ECFN(2,\f$ \beta)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
-///  - ECFN(3,\f$ \beta)  = \sum_{i<j<k} z_i z_j z_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
-///  - ECFN(4,\f$ \beta)  = \sum_{i<j<k<l} z_i z_j z_k z_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
+/// Note that there is no separate class that implements ECFN, though it is a
+/// notation that we will use in this documentation.  Examples of the low-point normalized
+/// correlators are:
+///  - \f$\mathrm{ECFN}(1,\beta)  = 1\f$
+///  - \f$\mathrm{ECFN}(2,\beta)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
+///  - \f$\mathrm{ECFN}(3,\beta)  = \sum_{i<j<k} z_i z_j z_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
+///  - \f$\mathrm{ECFN}(4,\beta)  = \sum_{i<j<k<l} z_i z_j z_k z_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
 ///  - ...
-///  where the z_i's are the energy fractions.  Note that there is no separate class that implements
-///  EnergyCorrelatorNormalized; this may be implemented in future releases.
+/// where the \f$z_i\f$'s are the energy fractions.
 ///
-/// When a new value of v is given, the generalized ECFGs are defined as
-///  - ECFG(v,3,\f$ \beta)  = \sum_{i<j<k} z_i z_j z_k \prod_{m = 1}^{v} \min^{(m)} \{ \theta_{ij}, \theta_{jk}, \theta_{ki} \}^\beta \f$
-///  - ECFG(v,4,\f$ \beta)  = \sum_{i<j<k<l} z_i z_j z_k z_l \prod_{m = 1}^{v} \min^{(m)} \{ \theta_{ij}, \theta_{ik}, \theta_{il}, \theta_{jk}, \theta_{jl}, \theta_{kl} \}^\beta \f$
-///  - ECFG(v,n,\f$ \beta)  = \sum_{i_1 < i_2 < \dots < i_n} z_{i_1} z_{i_2} \dots z_{i_n} \prod_{m = 1}^{v} \min^{(m)}_{s < t \in \{i_1, i_2 , \dots, i_n \}} \{ \theta_{st}^{\beta} \}\f$,
-///  where $\min^{(m)}$ means the m-th smallest element of the list.
+/// When a new value of v is given, the generalized energy correlators are defined as
+///  - \f$\mathrm{ECFG}(0,1,\beta)  = 1\f$
+///  - \f$\mathrm{ECFG}(1,2,\beta)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
+///  - \f$\mathrm{ECFG}(v,3,\beta)  = \sum_{i<j<k} z_i z_j z_k \prod_{m = 1}^{v} \min^{(m)} \{ \theta_{ij}, \theta_{jk}, \theta_{ki} \}^\beta \f$
+///  - \f$\mathrm{ECFG}(v,4,\beta)  = \sum_{i<j<k<l} z_i z_j z_k z_l \prod_{m = 1}^{v} \min^{(m)} \{ \theta_{ij}, \theta_{ik}, \theta_{il}, \theta_{jk}, \theta_{jl}, \theta_{kl} \}^\beta \f$
+///  - \f$\mathrm{ECFG}(v,n,\beta)  = \sum_{i_1 < i_2 < \dots < i_n} z_{i_1} z_{i_2} \dots z_{i_n} \prod_{m = 1}^{v} \min^{(m)}_{s < t \in \{i_1, i_2 , \dots, i_n \}} \{ \theta_{st}^{\beta} \}\f$,
+///
+/// where \f$\min^{(m)}\f$ means the m-th smallest element of the list.
 ///
 /// The correlation can be determined with energies and angles (as
 /// given above) or with transverse momenta and boost invariant angles
@@ -453,15 +459,16 @@ namespace contrib{
     class EnergyCorrelatorGeneralized : public FunctionOfPseudoJet<double> {
     public:
 
-        /// constructs an N-point correlator with angular exponent beta,
+        /// constructs an N-point correlator with v_angles pairwise angles
+        /// and angular exponent beta,
         /// using the specified choice of energy and angular measure as well
         /// one of two possible underlying computational Strategy
         EnergyCorrelatorGeneralized(int v_angles,
-                                    int n_zfactors,
+                                    int N,
                                     double beta,
                                     EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                                     EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                :  _angles(v_angles), _N(n_zfactors), _beta(beta), _measure(measure), _strategy(strategy),  _helper_correlator(1,_beta, _measure, _strategy) {};
+                :  _angles(v_angles), _N(N), _beta(beta), _measure(measure), _strategy(strategy),  _helper_correlator(1,_beta, _measure, _strategy) {};
 
         /// destructor
         virtual ~EnergyCorrelatorGeneralized(){}
@@ -547,7 +554,8 @@ namespace contrib{
 /// 3-point and 2-point energy correlators,
 ///     N_n = ECFG(2,n+1,beta)/ECFG(1,n,beta)^2,
 /// called \f$ N_i^{(\alpha, \beta)} \f$ in the publication.
-/// By definition, N_1^{beta} = ECFG(1, 2, 2*beta)
+/// By definition, N_1^{beta} = ECFG(1, 2, 2*beta), where the angular exponent
+/// is twice as big since the N series should involve two pairwise angles.
     class EnergyCorrelatorNseries : public FunctionOfPseudoJet<double> {
 
     public:
@@ -847,7 +855,7 @@ namespace contrib{
 
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorUseries
-/// A class to calculate the observable used for quark vs. gluon discrimination
+/// A class to calculate the observable used for quark versus gluon discrimination
 ///     U_n = ECFG(1,n+1,beta),
 /// called \f$ U_i^{(\beta)} \f$ in the publication.
 

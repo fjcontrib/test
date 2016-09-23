@@ -3,6 +3,7 @@
 	* EnergyCorrelator.cc/hh
 	Renamed EnergyCorrelatorNormalized -> EnergyCorrelatorGeneralized
 	Changed order of arguments for EnergyCorrelatorGeneralized
+	Updated doxygen documentation
 	* example_basic_usage.cc
 	Changed EnergyCorrelatorNormalized -> EnergyCorrelatorGeneralized
 	* README
