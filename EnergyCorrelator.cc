@@ -384,10 +384,10 @@ namespace contrib {
                             } else {
                                 double angle_list[] = {angle1, angle2, angle3};
                                 std::vector<double> angle_vector(angle_list, angle_list + N_total);
-                                std::sort(angle_vector.begin(), angle_vector.begin() + N_total);
+                                std::partial_sort(angle_vector.begin(), angle_vector.begin() + _angles, angle_vector.begin() + N_total);
 
                                 angle = angle_vector[0];
-                                for ( int l = 1; l < _angles; l++) { angle = angle * angle_vector[l]; }
+                                for ( int l = 1; l < _angles; l++) { angle *= angle_vector[l]; }
                             }
 
                             answer += energyStore[i]
@@ -420,10 +420,10 @@ namespace contrib {
 
                                     double angle_list[] = {angle1, angle2, angle3, angle4, angle5, angle6};
                                     std::vector<double> angle_vector(angle_list, angle_list + N_total);
-                                    std::sort(angle_vector.begin(), angle_vector.begin() + N_total);
+                                    std::partial_sort(angle_vector.begin(), angle_vector.begin() + _angles, angle_vector.begin() + N_total);
 
                                     angle = angle_vector[0];
-                                    for ( int s = 1; s < _angles; s++) { angle = angle * angle_vector[s]; }
+                                    for ( int s = 1; s < _angles; s++) { angle *= angle_vector[s]; }
 
                                 }
                                 answer +=  energyStore[i]
@@ -464,10 +464,10 @@ namespace contrib {
                                         double angle_list[] = {angle1, angle2, angle3, angle4, angle5, angle6,
                                                                angle7, angle8, angle9, angle10};
                                         std::vector<double> angle_vector(angle_list, angle_list + N_total);
-                                        std::sort(angle_vector.begin(), angle_vector.begin() + N_total);
+                                        std::partial_sort(angle_vector.begin(), angle_vector.begin() + _angles, angle_vector.begin() + N_total);
 
                                         angle = angle_vector[0];
-                                        for ( int s = 1; s < _angles; s++) { angle = angle * angle_vector[s]; }
+                                        for ( int s = 1; s < _angles; s++) { angle *= angle_vector[s]; }
                                     }
 
                                     answer +=  energyStore[i]

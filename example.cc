@@ -315,7 +315,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorNseries:  N_i(beta) = ECFN(i+1, beta, 2)/ECFN(i, beta, 1)^2 with " << modename[M] << endl;
+                cout << "EnergyCorrelatorNseries:  N_i(beta) = ECFG(i+1, 2, beta)/ECFG(i, 1, beta)^2 with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s %14s %14s \n","beta", "N=1", "N=2", "N=3");
 
@@ -333,7 +333,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorN2:  N2(beta) = ECFN(3, beta, 2)/ECFN(2, beta, 1)^2 with " << modename[M] << endl;
+                cout << "EnergyCorrelatorN2:  N2(beta) = ECFG(3, 2, beta)/ECFG(2, 1, beta)^2 with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "N2 obs");
 
@@ -348,7 +348,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorN3:  N3(beta) = ECFN(4, beta, 2)/ECFN(3, beta, 1)^2 with " << modename[M] << endl;
+                cout << "EnergyCorrelatorN3:  N3(beta) = ECFG(4, 2, beta)/ECFG(3, 1, beta)^2 with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "N3 obs");
 
@@ -362,7 +362,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorMseries:  M_i(beta) = ECFN(i+1, beta, 1)/ECFN(i, beta, 1) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorMseries:  M_i(beta) = ECFG(i+1, 1, beta)/ECFN(i, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s %14s %14s \n","beta", "N=1", "N=2", "N=3");
 
@@ -380,7 +380,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorM2:  M2(beta) = ECFN(3, beta, 1)/ECFN(3, beta, 1) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorM2:  M2(beta) = ECFG(3, 1, beta)/ECFG(3, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "M2 obs");
 
@@ -412,7 +412,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorUseries:  U_i(beta) = ECFN(i+1, beta, 1) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorUseries:  U_i(beta) = ECFG(i+1, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %20s %20s %20s \n","beta", "N=1", "N=2", "N=3");
 
@@ -429,7 +429,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorU1:  U1(beta) = ECFN(2, beta, 1) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorU1:  U1(beta) = ECFG(2, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "U1 obs");
 
@@ -443,7 +443,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorU2:  U2(beta) = ECFN(3, beta, 1) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorU2:  U2(beta) = ECFG(3, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "U2 obs");
 
@@ -457,7 +457,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 cout << "-------------------------------------------------------------------------------------" << endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorU3:  U3(beta) = ECFN(4, beta, 1) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorU3:  U3(beta) = ECFG(4, 1, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %14s \n","beta", "U3 obs");
 
@@ -564,6 +564,26 @@ void analyze(const vector<PseudoJet> & input_particles) {
                     clock_end = clock();
                     cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per C4"<< endl;
 
+                    // test N2
+                    num_iter = 10;
+                    clock_begin = clock();
+
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorN2 N2(beta,measurelist[M],EnergyCorrelator::slow);
+                        N2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per N2"<< endl;
+
+                    num_iter = 300;
+                    clock_begin = clock();
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorN2 N2(beta,measurelist[M],EnergyCorrelator::storage_array);
+                        N2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per N2"<< endl;
+
                     // test N3
                     num_iter = 10;
                     clock_begin = clock();
@@ -583,6 +603,46 @@ void analyze(const vector<PseudoJet> & input_particles) {
                     }
                     clock_end = clock();
                     cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per N3"<< endl;
+
+                    // test M2
+                    num_iter = 10;
+                    clock_begin = clock();
+
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorM2 M2(beta,measurelist[M],EnergyCorrelator::slow);
+                        M2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M2"<< endl;
+
+                    num_iter = 300;
+                    clock_begin = clock();
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorM2 M2(beta,measurelist[M],EnergyCorrelator::storage_array);
+                        M2(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M2"<< endl;
+
+                    // test M3
+                    num_iter = 10;
+                    clock_begin = clock();
+
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorMseries M3(3,beta,measurelist[M],EnergyCorrelator::slow);
+                        M3(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Slow method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M3"<< endl;
+
+                    num_iter = 300;
+                    clock_begin = clock();
+                    for (int t = 0; t < num_iter; t++) {
+                        EnergyCorrelatorMseries M3(3,beta,measurelist[M],EnergyCorrelator::storage_array);
+                        M3(myJet);
+                    }
+                    clock_end = clock();
+                    cout << "Storage array method: " << (clock_end-clock_begin)/double(CLOCKS_PER_SEC*num_iter)*1000 << " ms per M3"<< endl;
 
 
                 }
