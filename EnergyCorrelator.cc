@@ -284,7 +284,7 @@ namespace contrib {
         }
     }
 
-    double EnergyCorrelatorNormalized::result(const PseudoJet& jet) const {
+    double EnergyCorrelatorGeneralized::result(const PseudoJet& jet) const {
 
         // if jet does not have constituents, throw error
         if (!jet.has_constituents()) throw Error("EnergyCorrelator called on jet with no constituents.");
@@ -302,7 +302,7 @@ namespace contrib {
         std::vector<fastjet::PseudoJet> particles = jet.constituents();
         double answer = 0.0;
 
-        // return zero if the number of constituents is less than _N for the ECFN
+        // return zero if the number of constituents is less than _N for the ECFG
         if (particles.size() < _N) return 0.0 ;
 
         // The normalization is the energy or pt of the jet, which is also ECF(1, beta)
@@ -313,8 +313,8 @@ namespace contrib {
 
         // Find the max number of angles and throw an error if unsuitable
         int N_total = int(_N*(_N-1)/2);
-        if (_angles > N_total) throw Error("Requested number of angles for EnergyCorrelatorNormalized is larger than number of angles available");
-        if (_angles < -1) throw Error("Negative number of angles called for EnergyCorrelatorNormalized");
+        if (_angles > N_total) throw Error("Requested number of angles for EnergyCorrelatorGeneralized is larger than number of angles available");
+        if (_angles < -1) throw Error("Negative number of angles called for EnergyCorrelatorGeneralized");
 
         double half_beta = _beta/2.0;
 
@@ -333,7 +333,7 @@ namespace contrib {
 
         // if N > 4, then throw error
         if (_N > 5) {
-            throw Error("EnergyCorrelatorNormalized is only hard coded for N = 0,1,2,3,4,5");
+            throw Error("EnergyCorrelatorGeneralized is only hard coded for N = 0,1,2,3,4,5");
         }
 
         // Now deal with N = 3,4,5.  Different options if storage array is used or not.
@@ -609,7 +609,7 @@ namespace contrib {
     }
 
 
-    std::vector<double> EnergyCorrelatorNormalized::result_all_angles(const PseudoJet& jet) const {
+    std::vector<double> EnergyCorrelatorGeneralized::result_all_angles(const PseudoJet& jet) const {
 
         // if jet does not have constituents, throw error
         if (!jet.has_constituents()) throw Error("EnergyCorrelator called on jet with no constituents.");
@@ -626,7 +626,7 @@ namespace contrib {
         // find constituents
         std::vector<fastjet::PseudoJet> particles = jet.constituents();
 
-        // return zero if the number of constituents is less than _N for the ECFN
+        // return zero if the number of constituents is less than _N for the ECFG
         if (particles.size() < _N) {
             std::vector<double> ans (_N, 0.0);
             return ans;
@@ -661,7 +661,7 @@ namespace contrib {
         std::vector<double> ans (N_total, 0.0);
         // if N > 4, then throw error
         if (_N > 5) {
-            throw Error("EnergyCorrelatorNormalized is only hard coded for N = 0,1,2,3,4,5");
+            throw Error("EnergyCorrelatorGeneralized is only hard coded for N = 0,1,2,3,4,5");
         }
 
         // Now deal with N = 3,4,5.  Different options if storage array is used or not.
@@ -913,12 +913,12 @@ namespace contrib {
 
 
     // call _helper_correlator to get energy information
-    double EnergyCorrelatorNormalized::energy(const PseudoJet& jet) const {
+    double EnergyCorrelatorGeneralized::energy(const PseudoJet& jet) const {
         return _helper_correlator.energy(jet);
     }
  
     // call _helper_correlator to get angle information
-    double EnergyCorrelatorNormalized::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
+    double EnergyCorrelatorGeneralized::angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const {
         return _helper_correlator.angleSquared(jet1, jet2);
     }
 
@@ -998,28 +998,28 @@ namespace contrib {
 
     string EnergyCorrelatorGeneralizedD2::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable D2 ECFN(3,alpha)/ECF(2,beta)^(3 alpha/beta) for ";
+        oss << "Energy Correlator observable D2 ECFN(3,alpha)/ECFN(2,beta)^(3 alpha/beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorNseries::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable N_n ECFN(n+1,beta,2)/ECFN(n,beta,1)^2 for ";
+        oss << "Energy Correlator observable N_n ECFG(2,n+1,beta)/ECFG(1,n,beta)^2 for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorMseries::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable M_n ECFN(n+1,beta,1)/ECFN(n,beta,1) for ";
+        oss << "Energy Correlator observable M_n ECFG(1,n+1,beta)/ECFG(1,n,beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorN2::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable N2 ECFN(3,beta,2)/ECFN(2,beta,1)^2 for ";
+        oss << "Energy Correlator observable N2 ECFG(2,3,beta)/ECFG(1,2,beta)^2 for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
@@ -1027,14 +1027,14 @@ namespace contrib {
 
     string EnergyCorrelatorN3::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable N3 ECFN(4,beta,2)/ECFN(3,beta,1)^2 for ";
+        oss << "Energy Correlator observable N3 ECFG(2,4,beta)/ECFG(1,3,beta)^2 for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorM2::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable M2 ECFN(3,beta,1)/ECFN(2,beta,1) for ";
+        oss << "Energy Correlator observable M2 ECFG(1,3,beta)/ECFG(1,2,beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
@@ -1048,28 +1048,28 @@ namespace contrib {
 
     string EnergyCorrelatorUseries::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable U_n ECFN(n+1,beta,1) for ";
+        oss << "Energy Correlator observable U_n ECFG(1,n+1,beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorU1::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable U_1 ECFN(2,beta,1) for ";
+        oss << "Energy Correlator observable U_1 ECFG(1,2,beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorU2::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable U_2 ECFN(3,beta,1) for ";
+        oss << "Energy Correlator observable U_2 ECFG(1,3,beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }
 
     string EnergyCorrelatorU3::description() const {
         ostringstream oss;
-        oss << "Energy Correlator observable U_3 ECFN(4,beta,1) for ";
+        oss << "Energy Correlator observable U_3 ECFG(1,4,beta) for ";
         oss << EnergyCorrelator(3,_beta,_measure,_strategy).description_no_N();
         return oss.str();
     }

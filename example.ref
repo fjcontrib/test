@@ -96,7 +96,7 @@ EnergyCorrelatorGeneralizedD2:  D_2^(alpha, beta) = ECFN(3,alpha)/ECFN(2,beta)^(
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with pt_R
+EnergyCorrelatorGeneralized (angles = N Choose 2):  ECFN(N, beta) with pt_R
 -------------------------------------------------------------------------------------
    beta     N=1            N=2            N=3            N=4
   0.100    1.00   0.2746037664   0.0289380967   0.0013750278 
@@ -108,7 +108,7 @@ EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with pt_R
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta=1, angles) with pt_R
+EnergyCorrelatorGeneralized:  ECFG(angles, N, beta=1) with pt_R
 -------------------------------------------------------------------------------------
  angles     N=1            N=2            N=3            N=4
       1    1.00   0.0103421840   0.0007353402   0.0000733472 
@@ -323,7 +323,7 @@ EnergyCorrelatorGeneralizedD2:  D_2^(alpha, beta) = ECFN(3,alpha)/ECFN(2,beta)^(
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with E_theta
+EnergyCorrelatorGeneralized (angles = N Choose 2):  ECFN(N, beta) with E_theta
 -------------------------------------------------------------------------------------
    beta     N=1            N=2            N=3            N=4
   0.100    1.00   0.2653865755   0.0261167137   0.0011200786 
@@ -335,7 +335,7 @@ EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with E_theta
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta=1, angles) with E_theta
+EnergyCorrelatorGeneralized:  ECFG(angles, N, beta=1) with E_theta
 -------------------------------------------------------------------------------------
  angles     N=1            N=2            N=3            N=4
       1    1.00   0.0074693640   0.0005219446   0.0000521319 
@@ -550,7 +550,7 @@ EnergyCorrelatorGeneralizedD2:  D_2^(alpha, beta) = ECFN(3,alpha)/ECFN(2,beta)^(
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with pt_R
+EnergyCorrelatorGeneralized (angles = N Choose 2):  ECFN(N, beta) with pt_R
 -------------------------------------------------------------------------------------
    beta     N=1            N=2            N=3            N=4
   0.100    1.00   0.1976212201   0.0144075072   0.0004971883 
@@ -562,7 +562,7 @@ EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with pt_R
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta=1, angles) with pt_R
+EnergyCorrelatorGeneralized:  ECFG(angles, N, beta=1) with pt_R
 -------------------------------------------------------------------------------------
  angles     N=1            N=2            N=3            N=4
       1    1.00   0.0167406417   0.0005149099   0.0000275956 
@@ -777,7 +777,7 @@ EnergyCorrelatorGeneralizedD2:  D_2^(alpha, beta) = ECFN(3,alpha)/ECFN(2,beta)^(
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with E_theta
+EnergyCorrelatorGeneralized (angles = N Choose 2):  ECFN(N, beta) with E_theta
 -------------------------------------------------------------------------------------
    beta     N=1            N=2            N=3            N=4
   0.100    1.00   0.1981905437   0.0145501117   0.0005085991 
@@ -789,7 +789,7 @@ EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with E_theta
 -------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------------
-EnergyCorrelatorNormalized:  ECFN(N, beta=1, angles) with E_theta
+EnergyCorrelatorGeneralized:  ECFG(angles, N, beta=1) with E_theta
 -------------------------------------------------------------------------------------
  angles     N=1            N=2            N=3            N=4
       1    1.00   0.0173890665   0.0005243822   0.0000276026 

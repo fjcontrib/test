@@ -257,7 +257,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
 
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorNormalized:  ECFN(N, beta, angles = N Choose 2) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorGeneralized (angles = N Choose 2):  ECFN(N, beta) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %7s %14s %14s %14s\n","beta", "N=1", "N=2", "N=3", "N=4");
 
@@ -265,11 +265,11 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 for (unsigned int B = 0; B < betalist.size(); B++) {
                     double beta = betalist[B];
 
-                    EnergyCorrelatorNormalized ECF1(1, beta, 1, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF2(2, beta, 1, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF3(3, beta, 3, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF4(4, beta, 6, measurelist[M]);
-                    //EnergyCorrelatorNormalized ECF5(5, 5, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF1(-1,1, beta,  measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF2(-1,2, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF3(-1,3, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF4(-1,4, beta, measurelist[M]);
+                    //EnergyCorrelatorGeneralized ECF5(-1, 5, beta, measurelist[M]);
 
                     printf("%7.3f %7.2f %14.10f %14.10f %14.10f \n", beta, ECF1(myJet), ECF2(myJet), ECF3(myJet),
                            ECF4(myJet));
@@ -278,7 +278,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 endl << endl;
 
                 cout << "-------------------------------------------------------------------------------------" << endl;
-                cout << "EnergyCorrelatorNormalized:  ECFN(N, beta=1, angles) with " << modename[M] << endl;
+                cout << "EnergyCorrelatorGeneralized:  ECFG(angles, N, beta=1) with " << modename[M] << endl;
                 cout << "-------------------------------------------------------------------------------------" << endl;
                 printf("%7s %7s %14s %14s %14s\n","angles", "N=1", "N=2", "N=3", "N=4");
 
@@ -286,10 +286,10 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 for (unsigned int A = 1; A < 2; A++) {
                     double angle = A;
 
-                    EnergyCorrelatorNormalized ECF1(1, beta, angle, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF2(2, beta, angle, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF3(3, beta, angle, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF4(4, beta, angle, measurelist[M], EnergyCorrelator::slow);
+                    EnergyCorrelatorGeneralized ECF1(angle, 1, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF2(angle, 2, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF3(angle, 3, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF4(angle, 4, beta, measurelist[M], EnergyCorrelator::slow);
 
                     printf("%7.0f %7.2f %14.10f %14.10f %14.10f \n", angle, ECF1(myJet), ECF2(myJet), ECF3(myJet),
                            ECF4(myJet));
@@ -299,8 +299,8 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 for (unsigned int A = 2; A < 4; A++) {
                     double angle = A;
 
-                    EnergyCorrelatorNormalized ECF3(3, beta, angle, measurelist[M]);
-                    EnergyCorrelatorNormalized ECF4(4, beta, angle, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF3(angle, 3, beta, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF4(angle, 4, beta, measurelist[M]);
 
                     printf("%7.0f %7s %14s %14.10f %14.10f \n", angle, " " , " " ,ECF3(myJet), ECF4(myJet));
                 }
@@ -308,7 +308,7 @@ void analyze(const vector<PseudoJet> & input_particles) {
                 for (unsigned int A = 4; A < 7; A++) {
                     double angle = A;
 
-                    EnergyCorrelatorNormalized ECF4(4, beta, angle, measurelist[M]);
+                    EnergyCorrelatorGeneralized ECF4(angle, 4, beta, measurelist[M]);
                     printf("%7.0f %7s %14s %14s %14.10f \n", angle, " ", " ", " ", ECF4(myJet) );
                 }
                 cout << "-------------------------------------------------------------------------------------" <<

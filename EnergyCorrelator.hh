@@ -54,7 +54,7 @@ namespace contrib{
 /// - EnergyCorrelator
 /// - EnergyCorrelatorRatio
 /// - EnergyCorrelatorDoubleRatio
-/// - EnergyCorrelatorNormalized
+/// - EnergyCorrelatorGeneralized
 ///
 /// <p>There are five classes that define useful combinations of the ECFs.
 ///
@@ -112,7 +112,7 @@ namespace contrib{
 /// Run times scale as n^N/N!, where n is the number of particles in a jet.
 
     class EnergyCorrelator : public FunctionOfPseudoJet<double> {
-        friend class EnergyCorrelatorNormalized;  ///< This allow ECN to access the energy and angle definitions
+        friend class EnergyCorrelatorGeneralized;  ///< This allow ECN to access the energy and angle definitions
                                                   ///< of this class, which are otherwise private.
     public:
 
@@ -422,49 +422,49 @@ namespace contrib{
 
 
 //------------------------------------------------------------------------
-/// \class EnergyCorrelatorNormalized
-/// ECF(N,beta)/ECF(1,beta) is the normalized N-point energy correlation function, with an angular exponent beta.
-/// We then generalize to i number of angles where the definition is ECFN(N, beta, angles). When angles = N choose 2,
-/// this reproduces the earlier normalized energy correlation functions. By default, when angles = -1, angles is set to
-/// equal N choose 2 and this reproduces the normalized version of the earlier energy correlation functions
-/// When angles are not given, or given -1, the energy correlation functions are defined as follows
+/// \class EnergyCorrelatorGeneralized
+/// We define ECF(N,beta)/ECF(1,beta) = ECFN(N,beta) as the normalized N-point energy correlation function,
+/// with an angular exponent beta.  We then generalize to v number of angles where the definition is
+/// ECFG(v, N, beta). When v = N choose 2 (or, for convenience, v = -1), EnergyCorrelatorGeneralized
+/// gives the original normalized energy correlation functions:
 ///
+///  - ECFG(-1,1,\f$ \beta \f$) = ECFN(1,\f$ \beta \f$)
 ///  - ECFN(1,\f$ \beta)  = 1\f$
 ///  - ECFN(2,\f$ \beta)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
 ///  - ECFN(3,\f$ \beta)  = \sum_{i<j<k} z_i z_j z_k (\theta_{ij} \theta_{ik} \theta_{jk})^\beta \f$
 ///  - ECFN(4,\f$ \beta)  = \sum_{i<j<k<l} z_i z_j z_k z_l (\theta_{ij}  \theta_{ik} \theta_{il} \theta_{jk} \theta_{jl} \theta_{kl})^\beta \f$
 ///  - ...
-///  where the z_i's are the energy fractions.
+///  where the z_i's are the energy fractions.  Note that there is no separate class that implements
+///  EnergyCorrelatorNormalized; this may be implemented in future releases.
 ///
-/// When a new value of angles "a" is given, the ECFN are defined as
-///  - ECFN(1,\f$ \beta, a)  = 1\f$
-///  - ECFN(2,\f$ \beta, a)  = \sum_{i<j} z_i z_j \theta_{ij}^\beta \f$
-///  - ECFN(3,\f$ \beta, a)  = \sum_{i<j<k} z_i z_j z_k min_a( ( \theta_{ij} \theta_{ik}), (\theta_{ik}, \theta_{jk} ),
-///  (\theta_{ij}, \theta_{jk}) )^\beta \f$
-///  where min_a means the product of a elements of the following list.
-///  - ...
+/// When a new value of v is given, the generalized ECFGs are defined as
+///  - ECFG(v,3,\f$ \beta)  = \sum_{i<j<k} z_i z_j z_k \prod_{m = 1}^{v} \min^{(m)} \{ \theta_{ij}, \theta_{jk}, \theta_{ki} \}^\beta \f$
+///  - ECFG(v,4,\f$ \beta)  = \sum_{i<j<k<l} z_i z_j z_k z_l \prod_{m = 1}^{v} \min^{(m)} \{ \theta_{ij}, \theta_{ik}, \theta_{il}, \theta_{jk}, \theta_{jl}, \theta_{kl} \}^\beta \f$
+///  - ECFG(v,n,\f$ \beta)  = \sum_{i_1 < i_2 < \dots < i_n} z_{i_1} z_{i_2} \dots z_{i_n} \prod_{m = 1}^{v} \min^{(m)}_{s < t \in \{i_1, i_2 , \dots, i_n \}} \{ \theta_{st}^{\beta} \}\f$,
+///  where $\min^{(m)}$ means the m-th smallest element of the list.
+///
 /// The correlation can be determined with energies and angles (as
 /// given above) or with transverse momenta and boost invariant angles
 /// (the code's default). The choice is controlled by
-/// EnergyCorrelatorNormalized::Measure provided in the constructor.
+/// EnergyCorrelator::Measure provided in the constructor.
 ///
 /// The current implementation handles values of N up to and including 5.
 ///
-    class EnergyCorrelatorNormalized : public FunctionOfPseudoJet<double> {
+    class EnergyCorrelatorGeneralized : public FunctionOfPseudoJet<double> {
     public:
 
         /// constructs an N-point correlator with angular exponent beta,
         /// using the specified choice of energy and angular measure as well
         /// one of two possible underlying computational Strategy
-        EnergyCorrelatorNormalized(int N,
-                                   double beta,
-                                   int angles = -1,
-                                   EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
-                                   EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _N(N), _beta(beta), _angles(angles), _measure(measure), _strategy(strategy),  _helper_correlator(1,_beta, _measure, _strategy) {};
+        EnergyCorrelatorGeneralized(int v_angles,
+                                    int n_zfactors,
+                                    double beta,
+                                    EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
+                                    EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
+                :  _angles(v_angles), _N(n_zfactors), _beta(beta), _measure(measure), _strategy(strategy),  _helper_correlator(1,_beta, _measure, _strategy) {};
 
         /// destructor
-        virtual ~EnergyCorrelatorNormalized(){}
+        virtual ~EnergyCorrelatorGeneralized(){}
 
         /// returns the value of the normalized energy correlator for a jet's
         /// constituents. (Normally accessed by the parent class's
@@ -475,9 +475,9 @@ namespace contrib{
 
     private:
 
+        int _angles;
         int _N;
         double _beta;
-        int _angles;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
         EnergyCorrelator _helper_correlator;
@@ -533,8 +533,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorGeneralizedD2::result(const PseudoJet& jet) const {
 
-        double numerator = EnergyCorrelatorNormalized(3, _alpha, -1, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(2, _beta, -1, _measure, _strategy).result(jet);
+        double numerator = EnergyCorrelatorGeneralized(-1, 3, _alpha, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorGeneralized(-1, 2, _beta, _measure, _strategy).result(jet);
 
         return numerator/pow(denominator, 3.0*_alpha/_beta);
 
@@ -545,9 +545,9 @@ namespace contrib{
 /// \class EnergyCorrelatorNseries
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
-///     N_n = ECFN(n+1,beta,2)/ECFN(n,beta,1)^2,
+///     N_n = ECFG(2,n+1,beta)/ECFG(1,n,beta)^2,
 /// called \f$ N_i^{(\alpha, \beta)} \f$ in the publication.
-/// By definition, N_1^\beta = ECFN(2, 2*beta, 1)
+/// By definition, N_1^{beta} = ECFG(1, 2, 2*beta)
     class EnergyCorrelatorNseries : public FunctionOfPseudoJet<double> {
 
     public:
@@ -584,10 +584,10 @@ namespace contrib{
 
     inline double EnergyCorrelatorNseries::result(const PseudoJet& jet) const {
 
-        if (_n == 1) return EnergyCorrelatorNormalized(2, 2*_beta, 1, _measure, _strategy).result(jet);
-        // By definition, N1 = ECFN(2)^(2 beta)
-        double numerator = EnergyCorrelatorNormalized(_n + 1, _beta, 2, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(_n, _beta, 1, _measure, _strategy).result(jet);
+        if (_n == 1) return EnergyCorrelatorGeneralized(1, 2, 2*_beta, _measure, _strategy).result(jet);
+        // By definition, N1 = ECFN(2, 2 beta)
+        double numerator = EnergyCorrelatorGeneralized(2, _n + 1, _beta, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorGeneralized(1, _n, _beta, _measure, _strategy).result(jet);
 
         return numerator/denominator/denominator;
 
@@ -599,7 +599,7 @@ namespace contrib{
 /// \class EnergyCorrelatorN2
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
-///     ECFN(3,beta,2)/ECFN(2,beta,1)^2,
+///     ECFG(2,3,beta)/ECFG(1,2,beta)^2,
 /// called \f$ N_2^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorN2 : public FunctionOfPseudoJet<double> {
 
@@ -636,8 +636,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorN2::result(const PseudoJet& jet) const {
 
-        double numerator = EnergyCorrelatorNormalized(3, _beta, 2, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
+        double numerator = EnergyCorrelatorGeneralized(2, 3, _beta, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorGeneralized(1, 2, _beta, _measure, _strategy).result(jet);
 
         return numerator/denominator/denominator;
 
@@ -648,7 +648,7 @@ namespace contrib{
 /// \class EnergyCorrelatorN3
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
-///     ECFN(4,beta,2)/ECFN(3,beta,1)^2,
+///     ECFG(2,4,beta)/ECFG(1,3,beta)^2,
 /// called \f$ N_3^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorN3 : public FunctionOfPseudoJet<double> {
 
@@ -685,8 +685,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorN3::result(const PseudoJet& jet) const {
 
-        double numerator = EnergyCorrelatorNormalized(4, _beta, 2, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(3, _beta, 1, _measure, _strategy).result(jet);
+        double numerator = EnergyCorrelatorGeneralized(2, 4, _beta, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorGeneralized(1, 3, _beta, _measure, _strategy).result(jet);
 
         return numerator/denominator/denominator;
 
@@ -697,9 +697,9 @@ namespace contrib{
 /// \class EnergyCorrelatorMseries
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
-///     M_n = ECFN(n+1,beta,1)/ECFN(n,beta,1),
+///     M_n = ECFG(1,n+1,beta)/ECFG(1,n,beta),
 /// called \f$ M_i^{(\alpha, \beta)} \f$ in the publication.
-/// By definition, M_1^\beta = ECFN(2, beta, 1)
+/// By definition, M_1^{beta} = ECFG(1,2,beta)
     class EnergyCorrelatorMseries : public FunctionOfPseudoJet<double> {
 
     public:
@@ -736,10 +736,10 @@ namespace contrib{
 
     inline double EnergyCorrelatorMseries::result(const PseudoJet& jet) const {
 
-        if (_n == 1) return EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
+        if (_n == 1) return EnergyCorrelatorGeneralized(1, 2, _beta, _measure, _strategy).result(jet);
 
-        double numerator = EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(_n, _beta, 1, _measure, _strategy).result(jet);
+        double numerator = EnergyCorrelatorGeneralized(1, _n + 1, _beta, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorGeneralized(1, _n, _beta, _measure, _strategy).result(jet);
 
         return numerator/denominator;
 
@@ -749,7 +749,7 @@ namespace contrib{
 /// \class EnergyCorrelatorM2
 /// A class to calculate the observable formed from the ratio of the
 /// 3-point and 2-point energy correlators,
-///     ECFN(3,beta,1)/ECFN(2,beta,1),
+///     ECFG(1,3,beta)/ECFG(1,2,beta),
 /// called \f$ M_2^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorM2 : public FunctionOfPseudoJet<double> {
 
@@ -786,8 +786,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorM2::result(const PseudoJet& jet) const {
 
-        double numerator = EnergyCorrelatorNormalized(3, _beta, 1, _measure, _strategy).result(jet);
-        double denominator = EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
+        double numerator = EnergyCorrelatorGeneralized(1, 3, _beta, _measure, _strategy).result(jet);
+        double denominator = EnergyCorrelatorGeneralized(1, 2, _beta, _measure, _strategy).result(jet);
 
         return numerator/denominator;
 
@@ -838,8 +838,8 @@ namespace contrib{
 
     inline double EnergyCorrelatorCseries::result(const PseudoJet& jet) const {
 
-        double numerator = EnergyCorrelatorNormalized(_N - 1, _beta, -1, _measure, _strategy).result(jet) * EnergyCorrelatorNormalized(_N + 1, _beta, -1, _measure, _strategy).result(jet);
-        double denominator = pow(EnergyCorrelatorNormalized(_N, _beta, -1, _measure, _strategy).result(jet), 2.0);
+        double numerator = EnergyCorrelatorGeneralized(-1, _N - 1, _beta, _measure, _strategy).result(jet) * EnergyCorrelatorGeneralized(-1, _N + 1, _beta, _measure, _strategy).result(jet);
+        double denominator = pow(EnergyCorrelatorGeneralized(-1, _N, _beta, _measure, _strategy).result(jet), 2.0);
 
         return numerator/denominator;
 
@@ -848,7 +848,7 @@ namespace contrib{
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorUseries
 /// A class to calculate the observable used for quark vs. gluon discrimination
-///     U_n = ECFN(n+1,beta,1),
+///     U_n = ECFG(1,n+1,beta),
 /// called \f$ U_i^{(\beta)} \f$ in the publication.
 
     class EnergyCorrelatorUseries : public FunctionOfPseudoJet<double> {
@@ -887,7 +887,7 @@ namespace contrib{
 
     inline double EnergyCorrelatorUseries::result(const PseudoJet& jet) const {
 
-        double answer = EnergyCorrelatorNormalized(_n + 1, _beta, 1, _measure, _strategy).result(jet);
+        double answer = EnergyCorrelatorGeneralized(1, _n + 1, _beta, _measure, _strategy).result(jet);
         return answer;
 
     }
@@ -896,7 +896,7 @@ namespace contrib{
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorU1
 /// A class to calculate the observable formed from
-///     ECFN(2,beta,1),
+///     ECFG(1,2,beta),
 /// called \f$ U_1^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorU1 : public FunctionOfPseudoJet<double> {
 
@@ -933,7 +933,7 @@ namespace contrib{
 
     inline double EnergyCorrelatorU1::result(const PseudoJet& jet) const {
 
-        double answer = EnergyCorrelatorNormalized(2, _beta, 1, _measure, _strategy).result(jet);
+        double answer = EnergyCorrelatorGeneralized(1, 2, _beta, _measure, _strategy).result(jet);
 
         return answer;
 
@@ -943,7 +943,7 @@ namespace contrib{
     //------------------------------------------------------------------------
     /// \class EnergyCorrelatorU2
     /// A class to calculate the observable formed from
-    ///     ECFN(3,beta,1),
+    ///     ECFG(1,3,beta),
     /// called \f$ U_2^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorU2 : public FunctionOfPseudoJet<double> {
 
@@ -980,7 +980,7 @@ namespace contrib{
 
     inline double EnergyCorrelatorU2::result(const PseudoJet& jet) const {
 
-        double answer = EnergyCorrelatorNormalized(3, _beta, 1, _measure, _strategy).result(jet);
+        double answer = EnergyCorrelatorGeneralized(1, 3, _beta, _measure, _strategy).result(jet);
 
         return answer;
 
@@ -990,7 +990,7 @@ namespace contrib{
     //------------------------------------------------------------------------
     /// \class EnergyCorrelatorU3
     /// A class to calculate the observable formed from
-    ///     ECFN(4,beta,1),
+    ///     ECFG(1,4,beta),
     /// called \f$ U_3^{(\beta)} \f$ in the publication.
     class EnergyCorrelatorU3 : public FunctionOfPseudoJet<double> {
 
@@ -1027,7 +1027,7 @@ namespace contrib{
 
     inline double EnergyCorrelatorU3::result(const PseudoJet& jet) const {
 
-        double answer = EnergyCorrelatorNormalized(4, _beta, 1, _measure, _strategy).result(jet);
+        double answer = EnergyCorrelatorGeneralized(1, 4, _beta, _measure, _strategy).result(jet);
 
         return answer;
 

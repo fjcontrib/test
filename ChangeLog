@@ -1,3 +1,13 @@
+2016-09-15 Jesse Thaler  <jthaler@jthaler.net>
+
+	* EnergyCorrelator.cc/hh
+	Renamed EnergyCorrelatorNormalized -> EnergyCorrelatorGeneralized
+	Changed order of arguments for EnergyCorrelatorGeneralized
+	* example_basic_usage.cc
+	Changed EnergyCorrelatorNormalized -> EnergyCorrelatorGeneralized
+	* README
+	Updated for EnergyCorrelatorGeneralized
+
 2016-09-15 Lina Necib  <lnecib@mit.edu>
 
 	*VERSION:
