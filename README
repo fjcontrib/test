@@ -18,7 +18,7 @@ correlation functions are described in
 
    New Angles on Energy Correlation Functions.
    Ian Moult, Lina Necib, and Jesse Thaler.
-   arXiv:16xx.yyyyy.
+   arXiv:1609.07483.
 
 This FastJet-contrib package contains a number of classes derived from
 FunctionOfPseudoJet<double>.
@@ -70,12 +70,12 @@ EnergyCorrelatorD2(double beta, Measure measure)
 
 ----------------------------------------------------------------------------
 
-Generalized energy correlators were introduced in 16xx.yyyyy and appear in
+Generalized energy correlators were introduced in 1609.07483 and appear in
 version 1.2.  They are defined in the class:
 
 EnergyCorrelatorGeneralized(int angles, int N, double beta, Measure measure)
 
-  Called {}_v e_n^{(beta)} in 16xx.yyyyy, but will be denoted here as
+  Called {}_v e_n^{(beta)} in 1609.07483, but will be denoted here as
   ECFG(angles,N,beta), where v=angles and n=N.  As for EnergyCorrelator,
   beta is the angular exponent, while measure = pt_R (default) or E_theta
   sets how energies and angles are determined.  The integer angles
@@ -92,7 +92,7 @@ recommended usage.
 
 EnergyCorrelatorGeneralizedD2(double alpha, double beta, Measure measure)
 
-  Called D_2^(alpha, beta) in arXiv:160X.XXXXX  
+  Called D_2^(alpha, beta) in arXiv:1609.07483  
   Equals ECFN(3,alpha)/ECFN(2,beta)^(3 alpha/beta).  
   Useful for groomed 2-prong object tagging. We recommend the use of alpha=1
   and beta=2. 
@@ -101,18 +101,18 @@ EnergyCorrelatorGeneralizedD2(double alpha, double beta, Measure measure)
   
 EnergyCorrelatorNseries(int i, double beta, Measure measure)
 
-  Called N_i^(beta) in arXiv:160X.XXXXX  
+  Called N_i^(beta) in arXiv:1609.07483  
   Equals ECFG(2,n+1,beta)/ECFN(1,n,beta)^2.  
 
 EnergyCorrelatorN2(double beta, Measure measure)
 
-  Called N_2^(beta) in arXiv:160X.XXXXX  
+  Called N_2^(beta) in arXiv:1609.07483  
   Equals ECFG(2,3,beta)/ECFG(1,2,beta)^2. 
   Useful for groomed and ungroomed 2-prong object tagging.
  
 EnergyCorrelatorN3(double beta, Measure measure)
 
-  Called N_3^(beta) in arXiv:160X.XXXXX  
+  Called N_3^(beta) in arXiv:1609.07483  
   Equals ECFG(2,4,beta)/ECFG(1,3,beta)^2.  
   Useful for groomed 3-prong object tagging.
 
@@ -120,12 +120,12 @@ EnergyCorrelatorN3(double beta, Measure measure)
 
 EnergyCorrelatorMseries(int i, double beta, Measure measure)
 
-  Called M_i^(beta) in arXiv:160X.XXXXX  
+  Called M_i^(beta) in arXiv:1609.07483  
   Equals ECFG(1,n+1,beta)/ECFG(1,n,beta).  
 
 EnergyCorrelatorM2(double beta, Measure measure)
 
-  Called M_2^(beta) in arXiv:160X.XXXXX  
+  Called M_2^(beta) in arXiv:1609.07483  
   Equals ECFG(1,3,beta)/ECFG(1,2,beta).
   Useful for groomed 2-prong object tagging.
 
@@ -134,24 +134,24 @@ EnergyCorrelatorM2(double beta, Measure measure)
 
 EnergyCorrelatorUseries(int i, double beta, Measure measure)
 
-  Called U_i^(beta) in arXiv:160X.XXXXX  
+  Called U_i^(beta) in arXiv:1609.07483  
   Equals ECFG(1,n+1,beta).  
 
 EnergyCorrelatorU1(double beta, Measure measure)
 
-  Called U_1^(beta) in arXiv:160X.XXXXX  
+  Called U_1^(beta) in arXiv:1609.07483  
   Equals ECFG(1,2,beta).
   Useful for quark vs. gluon discrimination.
 
 EnergyCorrelatorU2(double beta, Measure measure)
 
-  Called U_2^(beta) in arXiv:160X.XXXXX  
+  Called U_2^(beta) in arXiv:1609.07483  
   Equals ECFG(1,3,beta).
   Useful for quark vs. gluon discrimination.
 
 EnergyCorrelatorU3(double beta, Measure measure)
 
-  Called U_3^(beta) in arXiv:160X.XXXXX  
+  Called U_3^(beta) in arXiv:1609.07483  
   Equals ECFG(1,4,beta).
   Useful for quark vs. gluon discrimination.
 ----------------------------------------------------------------------------

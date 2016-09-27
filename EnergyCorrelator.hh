@@ -45,7 +45,7 @@ namespace contrib{
 /// D2 described in arXiv:1409.6298 by Larkoski, Moult and Neill
 /// is also included in this contrib. Finally, a generalized version of
 /// the energy correlation functions is added, defined in
-/// arXiv:16xx.yyyyy by Moult, Necib and Thaler, which allow the
+/// arXiv:1609.07483 by Moult, Necib and Thaler, which allow the
 /// definition of the M series, N series, and U series observables.
 /// There is also a generalized version of D2.
 ///
