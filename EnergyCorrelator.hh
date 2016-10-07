@@ -425,8 +425,8 @@ namespace contrib{
 //------------------------------------------------------------------------
 /// \class EnergyCorrelatorGeneralized
 /// A generalized and normalized version of the N-point energy correlators, with
-/// angular exponent beta and v number of pairwise angles.  When v = N choose 2
-/// (or, for convenience, v = -1), EnergyCorrelatorGeneralized just gives normalized
+/// angular exponent beta and v number of pairwise angles.  When \f$v = {N \choose 2}\f$
+/// (or, for convenience, \f$v = -1\f$), EnergyCorrelatorGeneralized just gives normalized
 /// versions of EnergyCorrelator:
 ///  - \f$ \mathrm{ECFG}(-1,1,\beta) = \mathrm{ECFN}(N,\beta) = \mathrm{ECF}(N,\beta)/\mathrm{ECF}(1,\beta)\f$
 ///

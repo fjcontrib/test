@@ -1,3 +1,17 @@
+2016-10-07 Jesse Thaler  <jthaler@jthaler.net>
+
+	* AUTHORS/COPYING:
+	Updated the publication arXiv number to 1609.07483.
+
+	* EnergyCorrelator.hh
+	Fixed typo in EnergyCorrelatorGeneralized description
+
+	* NEWS
+	Added "USeries" to news.
+
+	* VERSION
+	Changed version to 1.2.0
+
 2016-09-27 Lina Necib  <lnecib@mit.edu>
 
 	* EnergyCorrelator.hh/README
