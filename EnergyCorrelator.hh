@@ -140,7 +140,7 @@ namespace contrib{
         /// constructs an N-point correlator with angular exponent beta,
         /// using the specified choice of energy and angular measure as well
         /// one of two possible underlying computational Strategy
-        EnergyCorrelator(int N,
+        EnergyCorrelator(unsigned int N,
                          double beta,
                          Measure measure = pt_R,
                          Strategy strategy = storage_array) :
@@ -162,7 +162,7 @@ namespace contrib{
 
     private:
 
-        int _N;
+        unsigned int _N;
         double _beta;
         Measure _measure;
         Strategy _strategy;
@@ -188,7 +188,7 @@ namespace contrib{
         /// angular exponent beta, using the specified choice of energy and
         /// angular measure as well one of two possible underlying
         /// computational strategies
-        EnergyCorrelatorRatio(int N,
+        EnergyCorrelatorRatio(unsigned int N,
                               double  beta,
                               EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                               EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
@@ -205,7 +205,7 @@ namespace contrib{
 
     private:
 
-        int _N;
+        unsigned int _N;
         double _beta;
 
         EnergyCorrelator::Measure _measure;
@@ -238,11 +238,15 @@ namespace contrib{
 
     public:
 
-        EnergyCorrelatorDoubleRatio(int N,
+        EnergyCorrelatorDoubleRatio(unsigned int N,
                                     double beta,
                                     EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R,
                                     EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
+                : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {
+                
+                    if (_N < 1) throw Error("EnergyCorrelatorDoubleRatio:  N must be 1 or greater.");
+                    
+                };
 
         virtual ~EnergyCorrelatorDoubleRatio() {}
 
@@ -256,7 +260,7 @@ namespace contrib{
 
     private:
 
-        int _N;
+        unsigned int _N;
         double _beta;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
@@ -266,7 +270,7 @@ namespace contrib{
 
 
     inline double EnergyCorrelatorDoubleRatio::result(const PseudoJet& jet) const {
-
+        
         double numerator = EnergyCorrelator(_N - 1, _beta, _measure, _strategy).result(jet) * EnergyCorrelator(_N + 1, _beta, _measure, _strategy).result(jet);
         double denominator = pow(EnergyCorrelator(_N, _beta, _measure, _strategy).result(jet), 2.0);
 
@@ -464,7 +468,7 @@ namespace contrib{
         /// using the specified choice of energy and angular measure as well
         /// one of two possible underlying computational Strategy
         EnergyCorrelatorGeneralized(int v_angles,
-                                    int N,
+                                    unsigned int N,
                                     double beta,
                                     EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                                     EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
@@ -483,7 +487,7 @@ namespace contrib{
     private:
 
         int _angles;
-        int _N;
+        unsigned int _N;
         double _beta;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
@@ -565,11 +569,15 @@ namespace contrib{
         /// angular measure as well one of two possible underlying
         /// computational strategies
         EnergyCorrelatorNseries(
-                int n,
+                unsigned int n,
                 double  beta,
                 EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                 EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {};
+                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {
+                
+                    if (_n < 1) throw Error("EnergyCorrelatorNseries:  n must be 1 or greater.");
+                
+                };
 
         virtual ~EnergyCorrelatorNseries() {}
 
@@ -582,7 +590,7 @@ namespace contrib{
 
     private:
 
-        int _n;
+        unsigned int _n;
         double _beta;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
@@ -591,7 +599,7 @@ namespace contrib{
 
 
     inline double EnergyCorrelatorNseries::result(const PseudoJet& jet) const {
-
+      
         if (_n == 1) return EnergyCorrelatorGeneralized(1, 2, 2*_beta, _measure, _strategy).result(jet);
         // By definition, N1 = ECFN(2, 2 beta)
         double numerator = EnergyCorrelatorGeneralized(2, _n + 1, _beta, _measure, _strategy).result(jet);
@@ -717,11 +725,15 @@ namespace contrib{
         /// angular measure as well one of two possible underlying
         /// computational strategies
         EnergyCorrelatorMseries(
-                int n,
+                unsigned int n,
                 double  beta,
                 EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                 EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {};
+                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {
+                
+                    if (_n < 1) throw Error("EnergyCorrelatorMseries:  n must be 1 or greater.");
+                    
+                };
 
         virtual ~EnergyCorrelatorMseries() {}
 
@@ -734,7 +746,7 @@ namespace contrib{
 
     private:
 
-        int _n;
+        unsigned int _n;
         double _beta;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
@@ -817,11 +829,15 @@ namespace contrib{
 
     public:
 
-        EnergyCorrelatorCseries(int N,
+        EnergyCorrelatorCseries(unsigned int N,
                                     double beta,
                                     EnergyCorrelator::Measure measure = EnergyCorrelator::pt_R,
                                     EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {};
+                : _N(N), _beta(beta), _measure(measure), _strategy(strategy) {
+                
+                    if (_N < 1) throw Error("EnergyCorrelatorCseries:  N must be 1 or greater.");
+                
+                };
 
         virtual ~EnergyCorrelatorCseries() {}
 
@@ -835,7 +851,7 @@ namespace contrib{
 
     private:
 
-        int _N;
+        unsigned int _N;
         double _beta;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
@@ -845,7 +861,7 @@ namespace contrib{
 
 
     inline double EnergyCorrelatorCseries::result(const PseudoJet& jet) const {
-
+      
         double numerator = EnergyCorrelatorGeneralized(-1, _N - 1, _beta, _measure, _strategy).result(jet) * EnergyCorrelatorGeneralized(-1, _N + 1, _beta, _measure, _strategy).result(jet);
         double denominator = pow(EnergyCorrelatorGeneralized(-1, _N, _beta, _measure, _strategy).result(jet), 2.0);
 
@@ -868,11 +884,15 @@ namespace contrib{
         /// angular measure as well one of two possible underlying
         /// computational strategies
         EnergyCorrelatorUseries(
-                int n,
+                unsigned int n,
                 double  beta,
                 EnergyCorrelator::Measure  measure  = EnergyCorrelator::pt_R,
                 EnergyCorrelator::Strategy strategy = EnergyCorrelator::storage_array)
-                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {};
+                : _n(n), _beta(beta), _measure(measure), _strategy(strategy) {
+                
+                    if (_n < 1) throw Error("EnergyCorrelatorUseries:  n must be 1 or greater.");
+                    
+                };
 
         virtual ~EnergyCorrelatorUseries() {}
 
@@ -885,7 +905,7 @@ namespace contrib{
 
     private:
 
-        int _n;
+        unsigned int _n;
         double _beta;
         EnergyCorrelator::Measure _measure;
         EnergyCorrelator::Strategy _strategy;
@@ -894,7 +914,7 @@ namespace contrib{
 
 
     inline double EnergyCorrelatorUseries::result(const PseudoJet& jet) const {
-
+      
         double answer = EnergyCorrelatorGeneralized(1, _n + 1, _beta, _measure, _strategy).result(jet);
         return answer;
 

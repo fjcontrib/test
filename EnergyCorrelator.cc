@@ -290,7 +290,8 @@ namespace contrib {
         if (!jet.has_constituents()) throw Error("EnergyCorrelator called on jet with no constituents.");
 
         // Throw an error if N < 0
-        if (_N < 0 ) throw Error("N cannot be negative");
+        // Not needed if N is unsigned integer
+        //if (_N < 0 ) throw Error("N cannot be negative");
         
         // get N = 0 case out of the way
         if (_N == 0) return 1.0;
