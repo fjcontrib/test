@@ -495,7 +495,11 @@ namespace contrib{
 
         double energy(const PseudoJet& jet) const;
         double angleSquared(const PseudoJet& jet1, const PseudoJet& jet2) const;
-
+        double multiply_angles(double angles[], int n_angles, unsigned int N_total) const;
+        void precompute_energies_and_angles(std::vector<fastjet::PseudoJet> const &particles, double* energyStore, double** angleStore) const;
+        double evaluate_n3(unsigned int nC, unsigned int n_angles, double* energyStore, double** angleStore) const;
+        double evaluate_n4(unsigned int nC, unsigned int n_angles, double* energyStore, double** angleStore) const;
+        double evaluate_n5(unsigned int nC, unsigned int n_angles, double* energyStore, double** angleStore) const;
     };
 
 

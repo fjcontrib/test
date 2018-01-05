@@ -1,3 +1,16 @@
+2018-01-04 Lina Necib  <lnecib@caltech.edu>
+
+	* EnergyCorrelator.hh/cc
+	Sped up evaluations of ECFG by a factor of 4.
+	Refactored some of the code in functions
+
+	* VERSION
+	Making 1.2.2-devel
+
+	* example.cc
+	Added some timings tests for ECFGs, N2, and N3.
+
+
 2017-01-25 Jesse Thaler  <jthaler@jthaler.net>
 
 	* EnergyCorrelator.hh/cc
