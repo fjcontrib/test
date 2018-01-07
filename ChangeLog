@@ -1,3 +1,13 @@
+2018-01-07 Lina Necib  <lnecib@caltech.edu>
+
+	* EnergyCorrelator.hh/cc
+	Sped up evaluations of ECFs.
+	Functions are defined in ECFs and called to evaluate ECFGs.
+
+	* VERSION
+	Making 1.2.3-devel
+
+
 2018-01-04 Lina Necib  <lnecib@caltech.edu>
 
 	* EnergyCorrelator.hh/cc
