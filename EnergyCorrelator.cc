@@ -103,6 +103,8 @@ namespace contrib {
             } else {
                 assert(_N <= 5);
             }
+            delete energyStore;
+            delete angleStore;
 
         } else if (_strategy == slow) {
             if (_N == 3) {
@@ -459,9 +461,11 @@ namespace contrib {
 
             unsigned int nC = particles.size();
             // Make energy storage
+//            double energyStore[nC];
             double *energyStore = new double[nC];
 
             // Make angular storage
+//            double angleStore[nC][nC];
             double **angleStore = new double*[nC];
 
             precompute_energies_and_angles(particles, energyStore, angleStore);
@@ -481,6 +485,8 @@ namespace contrib {
             } else {
                 assert(_N <= 5);
             }
+            delete energyStore;
+            delete angleStore;
         } else if (_strategy == EnergyCorrelator::slow) {
             if (_N == 3) {
                 unsigned int N_total = 3;
@@ -600,7 +606,6 @@ namespace contrib {
         } else {
             assert(_strategy == EnergyCorrelator::slow ||  _strategy == EnergyCorrelator::storage_array);
         }
-
         return answer;
     }
 
