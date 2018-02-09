@@ -1,3 +1,9 @@
+2018-02-08 Lina Necib  <lnecib@caltech.edu>
+
+	* EnergyCorrelator.cc
+	Debugging memory allocation, deleting energyStore/angleStore properly this time
+
+
 2018-02-04 Lina Necib  <lnecib@caltech.edu>
 
 	* EnergyCorrelator.cc
